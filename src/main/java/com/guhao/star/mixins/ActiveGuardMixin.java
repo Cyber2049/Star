@@ -99,6 +99,7 @@ public class ActiveGuardMixin extends GuardSkill {
                             assert a != null;
                             int e = a.getAmplifier() + 1;
                             L.addEffect(new MobEffectInstance(effect_reg.DEFENSE.get(), 140, e));
+                            L.playSound(EpicFightSounds.NEUTRALIZE_BOSSES,-0.2F,0.2F);
                         }
                     }
                     /////////////////////////////////
