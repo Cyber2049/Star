@@ -76,6 +76,7 @@ public class ActiveGuardMixin extends GuardSkill {
                                 if (patch instanceof LivingEntityPatch<?> livingEntityPatch) {
                                     ClientAnimator Animator = new ClientAnimator(livingEntityPatch);
                                     livingEntityPatch.playAnimationSynchronized(Animations.COMMON_GUARD_BREAK, 0.0F);
+                                    L.playSound(EpicFightSounds.NEUTRALIZE_BOSSES,0.8F,1.2F);
                                     /*
                                     livingEntityPatch.initAnimator(Animator);
                                     livingEntityPatch.playAnimationSynchronized(Animations.BIPED_DEATH, 0.0F);
@@ -99,7 +100,6 @@ public class ActiveGuardMixin extends GuardSkill {
                             assert a != null;
                             int e = a.getAmplifier() + 1;
                             L.addEffect(new MobEffectInstance(effect_reg.DEFENSE.get(), 140, e));
-                            L.playSound(EpicFightSounds.NEUTRALIZE_BOSSES,-0.2F,0.2F);
                         }
                     }
                     /////////////////////////////////
