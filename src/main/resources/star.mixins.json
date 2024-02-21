@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "com.guhao.star.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "star.refmap.json",
+  "mixins": [
+    "ActiveGuardMixin",
+    "AnimationsMixin"
+  ],
+  "client": [
+  ],
+  "minVersion": "0.8"
+}
