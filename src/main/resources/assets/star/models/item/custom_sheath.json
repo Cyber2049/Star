@@ -2,9 +2,9 @@
 	"overrides": [
 		{
 		  "predicate": {
-			"efrenderfix:custom": 0
+			"star:custom": 0
 		  },
-		  "model": "epicfight:item/uchigatana_sheath"
+		  "model": "epicfight:item/katana_sheath"
 		}
 	  ]
 }

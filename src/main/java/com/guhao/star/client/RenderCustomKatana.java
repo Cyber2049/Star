@@ -35,7 +35,7 @@ public class RenderCustomKatana extends RenderItemBase implements RenderCustomKa
 		
 		poseStack.pushPose();
 		this.mulPoseStack(poseStack, modelMatrix);
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, 0);
+        Minecraft.getInstance().getItemRenderer().renderStatic(this.sheathStack, ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, 0);
         poseStack.popPose();
     }
 }
