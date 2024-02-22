@@ -1,11 +1,15 @@
 package com.guhao.star;
 
-import com.guhao.star.regirster.effect_reg;
+import com.guhao.star.regirster.Effect_reg;
+import com.guhao.star.regirster.Items;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
@@ -37,7 +41,13 @@ public class Star {
             System.exit(114514);
         }
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        effect_reg  .REGISTRY.register(bus);
+        Effect_reg.REGISTRY.register(bus);
+        Items.ITEMS.register(bus);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+    }
+    private void commonSetup(final FMLCommonSetupEvent event) {
+        Config.load();
     }
 
     public static <T> void addNetworkMessage(Class<T> messageType, BiConsumer<T, FriendlyByteBuf> encoder, Function<FriendlyByteBuf, T> decoder, BiConsumer<T, Supplier<NetworkEvent.Context>> messageConsumer) {
