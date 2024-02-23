@@ -1,6 +1,7 @@
-package com.guhao.star.client;
+package com.guhao.star.event;
 
 import com.guhao.star.Config;
+import com.guhao.star.client.RenderCustomKatana;
 import com.guhao.star.regirster.Items;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.resources.ResourceLocation;
@@ -14,10 +15,6 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import yesman.epicfight.api.client.forgeevent.PatchedRenderersEvent;
-import yesman.epicfight.client.renderer.patched.item.RenderBow;
-import yesman.epicfight.client.renderer.patched.item.RenderCrossbow;
-import yesman.epicfight.client.renderer.patched.item.RenderItemBase;
-import yesman.epicfight.client.renderer.patched.item.RenderTrident;
 
 import java.util.List;
 
@@ -26,37 +23,9 @@ import static com.guhao.star.Star.MODID;
 @OnlyIn(Dist.CLIENT)
 @EventBusSubscriber(modid= MODID, value=Dist.CLIENT, bus=EventBusSubscriber.Bus.MOD)
 public class ClientModBusEvent {
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void RenderRegistry(final PatchedRenderersEvent.Add event) {
-        //bow
-        List<? extends String> bowitem = Config.BOW_ITEM.get();
-        for(String bow : bowitem){
-            Item bowItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(bow));
-            event.addItemRenderer(bowItem, new RenderBow());
-        }
-
-        //crossbow
-        List<? extends String> crossbowitem = Config.CROSSBOW_ITEM.get();
-        for(String crossbow : crossbowitem){
-            Item crossbowItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(crossbow));
-            event.addItemRenderer(crossbowItem, new RenderCrossbow());
-        }
-
-        //shield
-        List<? extends String> shielditem = Config.SHIELD_ITEM.get();
-        for(String shield : shielditem){
-            Item shieldItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(shield));
-            event.addItemRenderer(shieldItem, new RenderItemBase());
-        }
-
-        //trident
-        List<? extends String> tridentitem = Config.TRIDENT_ITEM.get();
-        for(String trident : tridentitem){
-            Item tridentItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(trident));
-            event.addItemRenderer(tridentItem, new RenderTrident());
-        }
-
-
         //sheath
         List<? extends String> katanaitem = Config.KATANA_ITEM.get();
         for(String katana : katanaitem){

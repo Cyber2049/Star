@@ -4,8 +4,8 @@ package com.guhao.star.effects;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 
-public class defense extends MobEffect {
-    public defense() {
+public class Defense extends MobEffect {
+    public Defense() {
         super(MobEffectCategory.HARMFUL, -13261);
     }
 

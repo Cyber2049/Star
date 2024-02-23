@@ -5,7 +5,8 @@
   "refmap": "star.refmap.json",
   "mixins": [
     "ActiveGuardMixin",
-    "AnimationsMixin"
+    "LockOnMixin",
+    "ShoulderRendererMixin"
   ],
   "client": [
   ],

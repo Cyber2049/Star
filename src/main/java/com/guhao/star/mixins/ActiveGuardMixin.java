@@ -1,6 +1,6 @@
 package com.guhao.star.mixins;
 
-import com.guhao.star.regirster.Effect_reg;
+import com.guhao.star.regirster.Effect;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -34,7 +34,7 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 
-@Mixin(value = ActiveGuardSkill.class, remap = false, priority = 5000)
+@Mixin(value = ActiveGuardSkill.class, remap = false)
 public class ActiveGuardMixin extends GuardSkill {
     public ActiveGuardMixin(Builder builder) {
         super(builder);
@@ -66,11 +66,11 @@ public class ActiveGuardMixin extends GuardSkill {
                     ///////////////////////////////
                     if (event.getDamageSource().getDirectEntity() instanceof Monster) {
                         LivingEntity L = (LivingEntity) event.getDamageSource().getDirectEntity();
-                        if (event.getPlayerPatch().getOriginal() instanceof Player && !(L.hasEffect(Effect_reg.DEFENSE.get()))) {
+                        if (event.getPlayerPatch().getOriginal() instanceof Player && !(L.hasEffect(Effect.DEFENSE.get()))) {
                             //L.hurt(DamageSource.playerAttack(event.getPlayerPatch().getOriginal()), (float) (event.getAmount()*Math.random())+2);     //这个是受伤
-                            L.addEffect(new MobEffectInstance(Effect_reg.DEFENSE.get(), 140, 0));
-                        } else if ((L.getEffect(Effect_reg.DEFENSE.get()).getAmplifier() >= 15)) {
-                            L.removeEffect(Effect_reg.DEFENSE.get());
+                            L.addEffect(new MobEffectInstance(Effect.DEFENSE.get(), 140, 0));
+                        } else if ((L.getEffect(Effect.DEFENSE.get()).getAmplifier() >= 15)) {
+                            L.removeEffect(Effect.DEFENSE.get());
                             LazyOptional<EntityPatch> optional = L.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
                             optional.ifPresent(patch -> {
                                 if (patch instanceof LivingEntityPatch<?> livingEntityPatch) {
@@ -96,10 +96,10 @@ public class ActiveGuardMixin extends GuardSkill {
                             });
 
                         } else {
-                            MobEffectInstance a = L.getEffect(Effect_reg.DEFENSE.get());
+                            MobEffectInstance a = L.getEffect(Effect.DEFENSE.get());
                             assert a != null;
                             int e = a.getAmplifier() + 1;
-                            L.addEffect(new MobEffectInstance(Effect_reg.DEFENSE.get(), 140, e));
+                            L.addEffect(new MobEffectInstance(Effect.DEFENSE.get(), 140, e));
                         }
                     }
                     /////////////////////////////////

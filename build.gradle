@@ -7,7 +7,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'org.spongepowered:mixingradle:0.7-SNAPSHOT'
+        classpath 'org.spongepowered:mixingradle:0.7.+'
     }
 }
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
@@ -158,6 +158,8 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation fg.deobf("libs:epicfight-18.3.8_stell:EpicFight")
     implementation fg.deobf("libs:Jade-1.18.2-forge-5.2.6:EpicFight")
+    implementation fg.deobf("libs:lockon-1.18.2-2.2:1.18.2-2.2")
+    implementation fg.deobf("libs:ShoulderSurfing-Forge-1.18.2-2.4.1:Forge-1.18.2-2.4.1")
     // Real mod deobf dependency stars - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency

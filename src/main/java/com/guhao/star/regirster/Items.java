@@ -8,6 +8,7 @@ import net.minecraftforge.registries.RegistryObject;
 import static com.guhao.star.Star.MODID;
 
 public class Items {
+
         public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
         public static final RegistryObject<Item> CUSTOM_SHEATH = ITEMS.register("custom_sheath", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
     }
