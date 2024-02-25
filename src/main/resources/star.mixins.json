@@ -5,10 +5,12 @@
   "refmap": "star.refmap.json",
   "mixins": [
     "ActiveGuardMixin",
-    "LockOnMixin",
     "ShoulderRendererMixin"
   ],
   "client": [
   ],
+  "injectors": {
+    "defaultRequire": 0
+  },
   "minVersion": "0.8"
 }

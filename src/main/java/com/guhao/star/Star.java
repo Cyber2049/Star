@@ -1,16 +1,21 @@
 package com.guhao.star;
 
+import com.guhao.star.client.input.StarKey;
+import com.guhao.star.efmex.IntegrationHandler;
+import com.guhao.star.efmex.StarAnimations;
 import com.guhao.star.regirster.Effect;
 import com.guhao.star.regirster.Items;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLConstructModEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
-@Mod("star")
+@Mod(Star.MODID)
 public class Star {
     public static final String MODID = "star";
 
@@ -32,11 +37,13 @@ public class Star {
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
         Effect.REGISTRY.register(bus);
         Items.ITEMS.register(bus);
-        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonSetup);
+        MinecraftForge.EVENT_BUS.register(new StarAnimations());
+        bus.addListener(StarAnimations::registerAnimations);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
+        StarKey.registerKeys();
     }
-    private void commonSetup(final FMLCommonSetupEvent event) {
-        Config.load();
+    @SubscribeEvent
+    public static void modConstruction(FMLConstructModEvent event) {
+        IntegrationHandler.construct();
     }
-
 }

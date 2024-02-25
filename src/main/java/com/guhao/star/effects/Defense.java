@@ -3,6 +3,7 @@ package com.guhao.star.effects;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
+import org.jetbrains.annotations.NotNull;
 
 public class Defense extends MobEffect {
     public Defense() {
@@ -10,7 +11,7 @@ public class Defense extends MobEffect {
     }
 
     @Override
-    public String getDescriptionId() {
+    public @NotNull String getDescriptionId() {
         return "effect.sword.defense";
     }
 

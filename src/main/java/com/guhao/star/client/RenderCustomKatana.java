@@ -1,5 +1,6 @@
 package com.guhao.star.client;
 
+import com.guhao.star.Config;
 import com.guhao.star.regirster.Items;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
@@ -34,7 +35,8 @@ public class RenderCustomKatana extends RenderItemBase{
 		
 		poseStack.pushPose();
 		this.mulPoseStack(poseStack, modelMatrix);
-        Minecraft.getInstance().getItemRenderer().renderStatic(this.sheathStack, ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, 0);
+		this.sheathStack.getOrCreateTag().putFloat("custom_sheath",Config.modelMap.get(stack.getItem()));
+		Minecraft.getInstance().getItemRenderer().renderStatic(this.sheathStack, ItemTransforms.TransformType.THIRD_PERSON_RIGHT_HAND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, 0);
         poseStack.popPose();
     }
 }

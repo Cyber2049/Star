@@ -11,5 +11,6 @@ public class Items {
 
         public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
         public static final RegistryObject<Item> CUSTOM_SHEATH = ITEMS.register("custom_sheath", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
+    public static final RegistryObject<Item> DEFENSE = ITEMS.register("defense", () -> new Item(new Item.Properties().rarity(Rarity.EPIC)));
     }
 

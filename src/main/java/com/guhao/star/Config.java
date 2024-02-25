@@ -25,5 +25,4 @@ public class Config {
             modelMap.put(katanaItem, Float.parseFloat(entry[1]));
         }
     }
-
 }

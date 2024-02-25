@@ -19,7 +19,7 @@ plugins {
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'org.spongepowered.mixin'
 
-version = '1.18.2-1.0.1'
+version = '1.18.2-1.0.2.5-fix'
 group = 'com.guhao.star' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'Star'
 
@@ -158,7 +158,6 @@ dependencies {
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     implementation fg.deobf("libs:epicfight-18.3.8_stell:EpicFight")
     implementation fg.deobf("libs:Jade-1.18.2-forge-5.2.6:EpicFight")
-    implementation fg.deobf("libs:lockon-1.18.2-2.2:1.18.2-2.2")
     implementation fg.deobf("libs:ShoulderSurfing-Forge-1.18.2-2.4.1:Forge-1.18.2-2.4.1")
     // Real mod deobf dependency stars - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
