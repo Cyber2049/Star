@@ -1,0 +1,46 @@
+{
+  "bong": {
+    "sounds": [
+      {
+        "name": "star:bong1",
+        "stream": true
+      },
+      {
+        "name": "star:bong2",
+        "stream": true
+      },
+      {
+        "name": "star:bong3",
+        "stream": true
+      }
+    ]
+  },
+  "bigbong": {
+    "sounds": [
+      {
+        "name": "star:bigbong1",
+        "stream": true
+      },
+      {
+        "name": "star:bigbong2",
+        "stream": true
+      },
+      {
+        "name": "star:bigbong3",
+        "stream": true
+      },
+      {
+        "name": "star:bigbong4",
+        "stream": true
+      }
+    ]
+  },
+  "danger": {
+    "sounds": [
+      {
+        "name": "star:danger",
+        "stream": true
+      }
+    ]
+  }
+}

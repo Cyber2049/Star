@@ -9,6 +9,8 @@ import java.util.*;
 
 public class Config {
 
+    public static Config INSTANCE = null;
+
     public final static Map<Item,Float> modelMap = new HashMap<>();
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
     public static final ForgeConfigSpec.ConfigValue<List<? extends String>> KATANA_ITEM = BUILDER
@@ -18,8 +20,8 @@ public class Config {
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static void load(){
-        List<? extends String> katanaitem = Config.KATANA_ITEM.get();
-        for(String katana : katanaitem){
+        List<?extends String> katanaitem = Config.KATANA_ITEM.get();
+        for (String katana : katanaitem){
             String[] entry = katana.split(" ");
             Item katanaItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry[0]));
             modelMap.put(katanaItem, Float.parseFloat(entry[1]));

@@ -5,7 +5,17 @@
   "refmap": "star.refmap.json",
   "mixins": [
     "ActiveGuardMixin",
-    "ShoulderRendererMixin"
+    "AnimationMixin",
+    "EntityEventsMixin",
+    "ForbiddenStrengthSkillMixin",
+    "GuardMixin",
+    "PlayerPatchMixin",
+    "ShoulderRendererMixin",
+    "TechnicianSkillMixin",
+    "itemmixin.EtherealArcItemMixin",
+    "itemmixin.LifeArcItemMixin",
+    "itemmixin.NatureArcItemMixin",
+    "itemmixin.PoisonArcItemMixin"
   ],
   "client": [
   ],
