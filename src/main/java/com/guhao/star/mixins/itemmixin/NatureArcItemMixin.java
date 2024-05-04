@@ -19,7 +19,7 @@ public class NatureArcItemMixin extends ArcItem {
     public void serverTick(ItemStack stack, ServerPlayer player, CallbackInfo ci) {
         ci.cancel();
         SkiesPlayer.ifPresent(player, (skiesPlayer) -> {
-            int regenRate = 40;
+            int regenRate = 60;
             if (player.tickCount % regenRate == 0 && player.getLastDamageSource() == null) {
                 float maxHealth = (float)((this.getFunctionalLevel(stack, player) + 1) * 2);
                 float currentHealth = skiesPlayer.getNatureHealth();
