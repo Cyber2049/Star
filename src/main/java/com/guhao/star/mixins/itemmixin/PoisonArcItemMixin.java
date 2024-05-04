@@ -2,27 +2,14 @@ package com.guhao.star.mixins.itemmixin;
 
 import com.legacy.blue_skies.items.arcs.ArcItem;
 import com.legacy.blue_skies.items.arcs.PoisonArcItem;
-import com.legacy.blue_skies.registries.SkiesEffects;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.UUID;
 
 @Mixin(value = PoisonArcItem.class,remap = false)
 public class PoisonArcItemMixin extends ArcItem {
     public PoisonArcItemMixin(int slotId) {
         super(slotId,"poison");
     }
+    /*
     @Unique
     private static final AttributeModifier[] NEW_DAMAGE_BOOSTS;
     static {
@@ -58,5 +45,7 @@ public class PoisonArcItemMixin extends ArcItem {
             }
         }
 
-    }
+
+
+    }  */
 }

@@ -23,7 +23,7 @@ public class EtherealArcItemMixin extends ArcItem {
     @Unique
     private static final AttributeModifier[] NEW_SPEED_BOOSTS;
     static {
-        NEW_SPEED_BOOSTS = new AttributeModifier[]{new AttributeModifier(UUID.fromString("9b997a54-73f4-4cea-9527-d24220cc98f6"), "ethereal_speed_1", 0.1, AttributeModifier.Operation.MULTIPLY_TOTAL), new AttributeModifier(UUID.fromString("33b4f594-371b-11e9-b210-d663bd873d94"), "ethereal_speed_2", 0.12, AttributeModifier.Operation.MULTIPLY_TOTAL), new AttributeModifier(UUID.fromString("945684da-5657-4294-9342-803c3528dbc6"), "ethereal_speed_3", 0.14, AttributeModifier.Operation.MULTIPLY_TOTAL), new AttributeModifier(UUID.fromString("9f6ef2b9-a342-4a6f-adf9-13b30fb71ea7"), "ethereal_speed_4", 0.16, AttributeModifier.Operation.MULTIPLY_TOTAL)};
+        NEW_SPEED_BOOSTS = new AttributeModifier[]{new AttributeModifier(UUID.fromString("9b997a54-73f4-4cea-9527-d24220cc98f6"), "ethereal_speed_1", 0.05, AttributeModifier.Operation.MULTIPLY_TOTAL), new AttributeModifier(UUID.fromString("33b4f594-371b-11e9-b210-d663bd873d94"), "ethereal_speed_2", 0.06, AttributeModifier.Operation.MULTIPLY_TOTAL), new AttributeModifier(UUID.fromString("945684da-5657-4294-9342-803c3528dbc6"), "ethereal_speed_3", 0.08, AttributeModifier.Operation.MULTIPLY_TOTAL), new AttributeModifier(UUID.fromString("9f6ef2b9-a342-4a6f-adf9-13b30fb71ea7"), "ethereal_speed_4", 0.1, AttributeModifier.Operation.MULTIPLY_TOTAL)};
     }
     @Inject(method = "onEquip",remap = false,at = @At("HEAD"), cancellable = true)
     public void onEquip(ItemStack stack, Player player, CallbackInfo ci) {

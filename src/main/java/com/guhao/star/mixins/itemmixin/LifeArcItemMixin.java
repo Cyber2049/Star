@@ -17,11 +17,12 @@ public class LifeArcItemMixin extends ArcItem {
     public LifeArcItemMixin(int slotId) {
         super(slotId,"life", (new Item.Properties()).tab((CreativeModeTab)null).stacksTo(1));
     }
+
     @Inject(method = "onHit",at = @At("HEAD"), cancellable = true)
     public void onHit(ItemStack stack, Player player, LivingDamageEvent event, CallbackInfo ci) {
         ci.cancel();
         int level = this.getFunctionalLevel(stack, player);
-        float reductionHealth = level == 0 ? 16.0F : (level == 1 ? 32.0F : 48.0F);
+        float reductionHealth = level == 0 ? 8.0F : (level == 1 ? 16.0F : 24.0F);
         if (player.getRemainingFireTicks() > 0 && player.getHealth() <= reductionHealth) {
             event.setAmount(event.getAmount() / 2.0F);
         }
