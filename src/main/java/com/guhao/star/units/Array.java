@@ -1,5 +1,6 @@
 package com.guhao.star.units;
 
+import com.guhao.GuHaoAnimations;
 import net.minecraft.world.damagesource.DamageSource;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.gameasset.Animations;
@@ -17,7 +18,10 @@ public class Array {
                  Animations.REVELATION_TWOHAND,
                  Animations.WRATHFUL_LIGHTING,
                  Animations.KATANA_SHEATH_DASH,
-                 Animations.LETHAL_SLICING_ONCE1
+                 Animations.LETHAL_SLICING_ONCE1,
+                 GuHaoAnimations.NB_ATTACK,
+                 GuHaoAnimations.GUHAO_BATTOJUTSU_DASH,
+                 GuHaoAnimations.BIU
          };//无视完美
          PARRY = new StaticAnimation[]{
          };
