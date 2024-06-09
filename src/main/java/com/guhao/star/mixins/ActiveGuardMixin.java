@@ -1,5 +1,6 @@
 package com.guhao.star.mixins;
 
+import com.guhao.init.Items;
 import com.guhao.star.api.StarAPI;
 import com.guhao.star.regirster.Effect;
 import com.guhao.star.regirster.Sounds;
@@ -12,7 +13,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.common.util.LazyOptional;
@@ -42,7 +42,7 @@ import yesman.epicfight.world.entity.eventlistener.HurtEvent;
 
 import java.util.Arrays;
 
-@Mixin(value = ParryingSkill.class, remap = false,priority = 99999)
+@Mixin(value = ParryingSkill.class, remap = false, priority = 999999)
 public class ActiveGuardMixin extends GuardSkill {
     public ActiveGuardMixin(Builder builder) {
         super(builder);
@@ -90,15 +90,114 @@ public class ActiveGuardMixin extends GuardSkill {
                     if (this.isBlockableSource(damageSource, true)) {
                         ServerPlayer playerentity = event.getPlayerPatch().getOriginal();
                         boolean successParrying = (playerentity.tickCount - container.getDataManager().getDataValue(LAST_ACTIVE) < 10);
+                        if (event.getPlayerPatch().getOriginal().getMainHandItem().getItem() == Items.GUHAO.get()) {
+                            successParrying = true;
+                        }
                         float penalty = container.getDataManager().getDataValue(PENALTY);
                         if (successParrying) {
-                            event.getPlayerPatch().playSound(Sounds.BIGBONG, -0.06F, 0.12F);
+                            event.getPlayerPatch().playSound(Sounds.BIGBONG, -0.21F, -0.12F);
                         } else {
-                            event.getPlayerPatch().playSound(Sounds.BONG, -0.06F, 0.12F);
+                            event.getPlayerPatch().playSound(Sounds.BONG, -0.21F, -0.12F);
                         }
                         EpicFightParticles.HIT_BLUNT.get().spawnParticleWithArgument((ServerLevel) playerentity.level, HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, playerentity, damageSource.getDirectEntity());
                         if (successParrying) {
+                            if (!(event.getPlayerPatch().getOriginal().getMainHandItem().getItem() == Items.GUHAO.get())) {
+                                event.setParried(true);
+                                penalty = 0.1F;
+                                knockback *= 0.4F;
+                                container.getDataManager().setData(LAST_ACTIVE, 0);
+                                star_new$Sta(event.getDamageSource());
+                                if (event.getDamageSource().getDirectEntity() instanceof Monster) {
+                                    Entity L = event.getDamageSource().getDirectEntity();
+                                    if (event.getPlayerPatch().getOriginal() != null && (L instanceof LivingEntity E) && (E.hasEffect(Effect.DEFENSE.get()))) {
+                                        E.removeEffect(Effect.DEFENSE.get());
+                                        LazyOptional<EntityPatch> optional = L.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
+                                        optional.ifPresent(patch -> {
+                                            if (patch instanceof LivingEntityPatch<?> livingEntityPatch) {
+                                                livingEntityPatch.playAnimationSynchronized(Animations.BIPED_COMMON_NEUTRALIZED, 0.0F);
+                                                L.playSound(EpicFightSounds.NEUTRALIZE_BOSSES, 3.0F, 1.2F);
+                                            }
+                                        });
+                                    }
+                                }
+                            } else {
+                                event.setParried(true);
+                                if (event.getPlayerPatch().getOriginal().hasEffect(com.guhao.init.Effect.GUHAO.get())) {
+                                    Entity E = event.getDamageSource().getDirectEntity();
+                                    E.hurt(DamageSource.playerAttack(event.getPlayerPatch().getOriginal().getLevel().getNearestPlayer(event.getPlayerPatch().getOriginal(), -1)), (event.getAmount()*0.25f));
+                                    EpicFightParticles.EVISCERATE.get().spawnParticleWithArgument((ServerLevel) playerentity.level, HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, playerentity, damageSource.getDirectEntity());
+
+                                }
+                                penalty = 0.0F;
+                                knockback *= 0.0F;
+                                container.getDataManager().setData(LAST_ACTIVE, 0);
+                                star_new$Sta(event.getDamageSource());
+                                if (event.getDamageSource().getDirectEntity() instanceof Monster) {
+                                    Entity L = event.getDamageSource().getDirectEntity();
+                                    if (event.getPlayerPatch().getOriginal() != null && (L instanceof LivingEntity E) && (E.hasEffect(Effect.DEFENSE.get()))) {
+                                            E.removeEffect(Effect.DEFENSE.get());
+                                            LazyOptional<EntityPatch> optional = L.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
+                                            optional.ifPresent(patch -> {
+                                                if (patch instanceof LivingEntityPatch<?> livingEntityPatch) {
+                                                    livingEntityPatch.playAnimationSynchronized(Animations.BIPED_COMMON_NEUTRALIZED, 0.0F);
+                                                    L.playSound(EpicFightSounds.NEUTRALIZE_BOSSES, 3.0F, 1.2F);
+                                                }
+                                            });
+                                    }
+                                }
+                            }
+                        } else {
+                            penalty += this.getPenalizer(itemCapability);
+                            container.getDataManager().setDataSync(PENALTY, penalty, playerentity);
+                        }
+
+                        Entity var12 = damageSource.getDirectEntity();
+                        if (var12 instanceof LivingEntity) {
+                            LivingEntity livingentity = (LivingEntity) var12;
+                            knockback += (float) EnchantmentHelper.getKnockbackBonus(livingentity) * 0.1F;
+                        }
+
+                        event.getPlayerPatch().knockBackEntity(damageSource.getDirectEntity().position(), knockback);
+                        float consumeAmount = penalty * impact;
+                        event.getPlayerPatch().consumeStaminaAlways(consumeAmount);
+                        GuardSkill.BlockType blockType = successParrying ? BlockType.ADVANCED_GUARD : (event.getPlayerPatch().hasStamina(0.0F) ? BlockType.GUARD : BlockType.GUARD_BREAK);
+                        StaticAnimation animation = this.getGuardMotion(event.getPlayerPatch(), itemCapability, blockType);
+                        if (animation != null) {
+                            event.getPlayerPatch().playAnimationSynchronized(animation, 0.0F);
+                        }
+
+                        if (blockType == BlockType.GUARD_BREAK) {
+                            event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
+                        }
+
+                        this.dealEvent(event.getPlayerPatch(), event, advanced);
+
+                    }
+                }
+            }
+        }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        else {
+            if (this.isHoldingWeaponAvailable(event.getPlayerPatch(), itemCapability, BlockType.ADVANCED_GUARD)) {
+                DamageSource damageSource = event.getDamageSource();
+                if (this.isBlockableSource(damageSource, true)) {
+
+                    ServerPlayer playerentity = event.getPlayerPatch().getOriginal();
+                    boolean successParrying = playerentity.tickCount - container.getDataManager().getDataValue(LAST_ACTIVE) < 10;
+                    if (event.getPlayerPatch().getOriginal().getMainHandItem().getItem() == Items.GUHAO.get()) {
+                        successParrying = true;
+                    }
+                    float penalty = container.getDataManager().getDataValue(PENALTY);
+                    if (successParrying) {
+                        event.getPlayerPatch().playSound(Sounds.BIGBONG, -0.06F, 0.12F);
+                    } else {
+                        event.getPlayerPatch().playSound(Sounds.BONG, -0.06F, 0.12F);
+                    }
+                    EpicFightParticles.HIT_BLUNT.get().spawnParticleWithArgument((ServerLevel) playerentity.level, HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, playerentity, damageSource.getDirectEntity());
+                    if (successParrying) {
+                        if (!(event.getPlayerPatch().getOriginal().getMainHandItem().getItem() == Items.GUHAO.get())) {
                             event.setParried(true);
+
                             penalty = 0.1F;
                             knockback *= 0.4F;
                             container.getDataManager().setData(LAST_ACTIVE, 0);
@@ -119,71 +218,30 @@ public class ActiveGuardMixin extends GuardSkill {
                                 }
                             }
                         } else {
-                            penalty += this.getPenalizer(itemCapability);
-                            container.getDataManager().setDataSync(PENALTY, penalty, playerentity);
-                        }
-
-                        Entity var12 = damageSource.getDirectEntity();
-                        if (var12 instanceof LivingEntity) {
-                            LivingEntity livingentity = (LivingEntity) var12;
-                            knockback += (float) EnchantmentHelper.getKnockbackBonus(livingentity) * 0.1F;
-                        }
-
-                        ((ServerPlayerPatch) event.getPlayerPatch()).knockBackEntity(damageSource.getDirectEntity().position(), knockback);
-                        float consumeAmount = penalty * impact;
-                        ((ServerPlayerPatch) event.getPlayerPatch()).consumeStaminaAlways(consumeAmount);
-                        GuardSkill.BlockType blockType = successParrying ? BlockType.ADVANCED_GUARD : (((ServerPlayerPatch) event.getPlayerPatch()).hasStamina(0.0F) ? BlockType.GUARD : BlockType.GUARD_BREAK);
-                        StaticAnimation animation = this.getGuardMotion(event.getPlayerPatch(), itemCapability, blockType);
-                        if (animation != null) {
-                            ((ServerPlayerPatch) event.getPlayerPatch()).playAnimationSynchronized(animation, 0.0F);
-                        }
-
-                        if (blockType == BlockType.GUARD_BREAK) {
-                            ((ServerPlayerPatch) event.getPlayerPatch()).playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
-                        }
-
-                        this.dealEvent(event.getPlayerPatch(), event, advanced);
-                        ;
-                    }
-                }
-            } else {
-                ;
-            }
-        }
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        else {
-            if (this.isHoldingWeaponAvailable(event.getPlayerPatch(), itemCapability, BlockType.ADVANCED_GUARD)) {
-                DamageSource damageSource = event.getDamageSource();
-                if (this.isBlockableSource(damageSource, true)) {
-
-                    ServerPlayer playerentity = event.getPlayerPatch().getOriginal();
-                    boolean successParrying = playerentity.tickCount - container.getDataManager().getDataValue(LAST_ACTIVE) < 10;
-                    float penalty = container.getDataManager().getDataValue(PENALTY);
-                    if (successParrying) {
-                        event.getPlayerPatch().playSound(Sounds.BIGBONG, -0.06F, 0.12F);
-                    } else {
-                        event.getPlayerPatch().playSound(Sounds.BONG, -0.06F, 0.12F);
-                    }
-                    EpicFightParticles.HIT_BLUNT.get().spawnParticleWithArgument((ServerLevel) playerentity.level, HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, playerentity, damageSource.getDirectEntity());
-                    if (successParrying) {
-                        event.setParried(true);
-                        penalty = 0.1F;
-                        knockback *= 0.4F;
-                        container.getDataManager().setData(LAST_ACTIVE, 0);
-                        star_new$Sta(event.getDamageSource());
-                        if (event.getDamageSource().getDirectEntity() instanceof Monster) {
-                            Entity L = event.getDamageSource().getDirectEntity();
-                            if (event.getPlayerPatch().getOriginal() != null && (L instanceof LivingEntity E) && (E.hasEffect(Effect.DEFENSE.get()))) {
-                                E.removeEffect(Effect.DEFENSE.get());
-                                LazyOptional<EntityPatch> optional = L.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
-                                optional.ifPresent(patch -> {
-                                    if (patch instanceof LivingEntityPatch<?> livingEntityPatch) {
-                                        ClientAnimator Animator = new ClientAnimator(livingEntityPatch);
-                                        livingEntityPatch.playAnimationSynchronized(Animations.BIPED_COMMON_NEUTRALIZED, 0.0F);
-                                        Animator.getOwner().getImpact(E.getUsedItemHand());
-                                        L.playSound(EpicFightSounds.NEUTRALIZE_BOSSES, 3.0F, 1.2F);
-                                    }
-                                });
+                            event.setParried(true);
+                            if (event.getPlayerPatch().getOriginal().hasEffect(com.guhao.init.Effect.GUHAO.get())) {
+                                Entity E = event.getDamageSource().getDirectEntity();
+                                E.hurt(DamageSource.playerAttack(event.getPlayerPatch().getOriginal().getLevel().getNearestPlayer(event.getPlayerPatch().getOriginal(), -1)), (event.getAmount()*0.25f));
+                                EpicFightParticles.EVISCERATE.get().spawnParticleWithArgument((ServerLevel) playerentity.level, HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, playerentity, damageSource.getDirectEntity());
+                            }
+                            penalty = 0.0F;
+                            knockback *= 0.0F;
+                            container.getDataManager().setData(LAST_ACTIVE, 0);
+                            star_new$Sta(event.getDamageSource());
+                            if (event.getDamageSource().getDirectEntity() instanceof Monster) {
+                                Entity L = event.getDamageSource().getDirectEntity();
+                                if (event.getPlayerPatch().getOriginal() != null && (L instanceof LivingEntity E) && (E.hasEffect(Effect.DEFENSE.get()))) {
+                                    E.removeEffect(Effect.DEFENSE.get());
+                                    LazyOptional<EntityPatch> optional = L.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
+                                    optional.ifPresent(patch -> {
+                                        if (patch instanceof LivingEntityPatch<?> livingEntityPatch) {
+                                            ClientAnimator Animator = new ClientAnimator(livingEntityPatch);
+                                            livingEntityPatch.playAnimationSynchronized(Animations.BIPED_COMMON_NEUTRALIZED, 0.0F);
+                                            Animator.getOwner().getImpact(E.getUsedItemHand());
+                                            L.playSound(EpicFightSounds.NEUTRALIZE_BOSSES, 3.0F, 1.2F);
+                                        }
+                                    });
+                                }
                             }
                         }
 
@@ -198,21 +256,20 @@ public class ActiveGuardMixin extends GuardSkill {
                         knockback += (float) EnchantmentHelper.getKnockbackBonus(livingentity) * 0.1F;
                     }
 
-                    ((ServerPlayerPatch) event.getPlayerPatch()).knockBackEntity(damageSource.getDirectEntity().position(), knockback);
+                    event.getPlayerPatch().knockBackEntity(damageSource.getDirectEntity().position(), knockback);
                     float consumeAmount = penalty * impact;
-                    ((ServerPlayerPatch) event.getPlayerPatch()).consumeStaminaAlways(consumeAmount);
+                    event.getPlayerPatch().consumeStaminaAlways(consumeAmount);
                     GuardSkill.BlockType blockType = successParrying ? BlockType.ADVANCED_GUARD : (((ServerPlayerPatch) event.getPlayerPatch()).hasStamina(0.0F) ? BlockType.GUARD : BlockType.GUARD_BREAK);
                     StaticAnimation animation = this.getGuardMotion(event.getPlayerPatch(), itemCapability, blockType);
                     if (animation != null) {
-                        ((ServerPlayerPatch) event.getPlayerPatch()).playAnimationSynchronized(animation, 0.0F);
+                        event.getPlayerPatch().playAnimationSynchronized(animation, 0.0F);
                     }
 
                     if (blockType == BlockType.GUARD_BREAK) {
-                        ((ServerPlayerPatch) event.getPlayerPatch()).playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
+                        event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                     }
 
                     this.dealEvent(event.getPlayerPatch(), event, advanced);
-                    ;
                 }
             }
         }
@@ -233,10 +290,10 @@ public class ActiveGuardMixin extends GuardSkill {
             remap = false
     )
     private float setImpact(float impact) {
-        if (ModList.get().isLoaded("epicparagliders") && (Boolean) CommonConfig.EPIC_PARAGLIDER_COMPAT.get()) {
+        if (ModList.get().isLoaded("epicparagliders") && CommonConfig.EPIC_PARAGLIDER_COMPAT.get()) {
             return impact;
         } else {
-            float blockrate = 1.0F - Math.min((float)((ServerPlayer)((ServerPlayerPatch)this.event.getPlayerPatch()).getOriginal()).getAttributeValue((Attribute) ToyBoxAttributes.BLOCK_RATE.get()) / 100.0F, 0.9F);
+            float blockrate = 1.0F - Math.min((float) this.event.getPlayerPatch().getOriginal().getAttributeValue(ToyBoxAttributes.BLOCK_RATE.get()) / 100.0F, 0.9F);
             Object var4 = this.event.getDamageSource();
             if (var4 instanceof EpicFightDamageSource) {
                 EpicFightDamageSource epicdamagesource = (EpicFightDamageSource)var4;

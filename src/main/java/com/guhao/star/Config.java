@@ -17,10 +17,17 @@ public class Config {
             .comment("items considered as katana", "example: minecraft:apple 0")
             .defineListAllowEmpty(Collections.singletonList("katana_items"), ArrayList::new, obj -> true);
 
+    public static final ForgeConfigSpec.BooleanValue SLOW_TIME = BUILDER
+            .comment("slow time.")
+            .define("Multiplayer please turn off",true);
+
+
+
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static void load(){
         List<?extends String> katanaitem = Config.KATANA_ITEM.get();
+        Boolean time = Config.SLOW_TIME.get();
         for (String katana : katanaitem){
             String[] entry = katana.split(" ");
             Item katanaItem = ForgeRegistries.ITEMS.getValue(new ResourceLocation(entry[0]));

@@ -94,9 +94,9 @@ public abstract class GuardMixin extends Skill {
             StaticAnimation an = epicFightDamageSource.getAnimation();
             if (!(Arrays.asList(star_new$GUARD).contains(an))) {
                 if (this.isBlockableSource(damageSource, advanced) && !(Arrays.asList(star_new$GUARD).contains(an))) {
-                    ((ServerPlayerPatch) event.getPlayerPatch()).playSound(Sounds.BONG, -0.06F, 0.12F);
-                    ServerPlayer serveerPlayer = (ServerPlayer) ((ServerPlayerPatch) event.getPlayerPatch()).getOriginal();
-                    ((HitParticleType) EpicFightParticles.HIT_BLUNT.get()).spawnParticleWithArgument(serveerPlayer.getLevel(), HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, serveerPlayer, damageSource.getDirectEntity());
+                    event.getPlayerPatch().playSound(Sounds.BONG, -0.06F, 0.12F);
+                    ServerPlayer serveerPlayer = event.getPlayerPatch().getOriginal();
+                    EpicFightParticles.HIT_BLUNT.get().spawnParticleWithArgument(serveerPlayer.getLevel(), HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, serveerPlayer, damageSource.getDirectEntity());
                     Entity var10 = damageSource.getDirectEntity();
                     if (var10 instanceof LivingEntity) {
                         LivingEntity livingEntity = (LivingEntity) var10;
@@ -130,10 +130,10 @@ public abstract class GuardMixin extends Skill {
                             knockback += (float) EnchantmentHelper.getKnockbackBonus(livingEntity) * 0.1F;
                         }
 
-                        float penalty = (Float) container.getDataManager().getDataValue(PENALTY) + getPenalizer(itemCapability);
+                        float penalty = container.getDataManager().getDataValue(PENALTY) + getPenalizer(itemCapability);
                         float consumeAmount = penalty * impact;
-                        ((ServerPlayerPatch) event.getPlayerPatch()).knockBackEntity(damageSource.getDirectEntity().position(), knockback);
-                        ((ServerPlayerPatch) event.getPlayerPatch()).consumeStaminaAlways(consumeAmount);
+                        event.getPlayerPatch().knockBackEntity(damageSource.getDirectEntity().position(), knockback);
+                        event.getPlayerPatch().consumeStaminaAlways(consumeAmount);
                         container.getDataManager().setDataSync(PENALTY, penalty, (ServerPlayer) ((ServerPlayerPatch) event.getPlayerPatch()).getOriginal());
                         GuardSkill.BlockType blockType = ((ServerPlayerPatch) event.getPlayerPatch()).hasStamina(0.0F) ? GuardSkill.BlockType.GUARD : GuardSkill.BlockType.GUARD_BREAK;
                         StaticAnimation animation = getGuardMotion(event.getPlayerPatch(), itemCapability, blockType);
@@ -148,8 +148,6 @@ public abstract class GuardMixin extends Skill {
                         dealEvent(event.getPlayerPatch(), event, advanced);
                     }
                 }
-            } else {
-                ;
             }
         }
     }

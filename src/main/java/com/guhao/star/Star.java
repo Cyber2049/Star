@@ -45,7 +45,7 @@ public class Star {
         MinecraftForge.EVENT_BUS.register(new StarAnimations());
         bus.addListener(StarAnimations::registerAnimations);
         ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
-        StarSkill.registerSkills();
+        //StarSkill.registerSkills();
     }
     @SubscribeEvent
     public static void modConstruction(FMLConstructModEvent event) {

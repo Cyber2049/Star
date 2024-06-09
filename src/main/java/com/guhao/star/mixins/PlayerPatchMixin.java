@@ -1,28 +1,68 @@
 package com.guhao.star.mixins;
 
-import com.guhao.star.regirster.Effect;
-import net.minecraft.world.InteractionHand;
+import com.guhao.star.api.HitAnimationMixin;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
-import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 
 @Mixin(value = PlayerPatch.class , remap = false)
-public abstract class PlayerPatchMixin<T extends Player> extends LivingEntityPatch<T> {
+public abstract class PlayerPatchMixin<T extends Player> extends LivingEntityPatch<T> implements HitAnimationMixin {
 
-    @Inject(method = "getDamageSource",at = @At("TAIL"))
-    public void getDamageSource(StaticAnimation animation, InteractionHand hand, CallbackInfoReturnable<EpicFightDamageSource> cir) {
-        Player p = this.getOriginal();
-        EpicFightDamageSource damagesource = EpicFightDamageSource.commonEntityDamageSource("player", this.original, animation);
-        if (p.hasEffect(Effect.REALLY_STUN_IMMUNITY.get())) {
-            damagesource.setImpact(0);
+
+    /*
+    @Unique
+    public StaticAnimation star_new$getHitAnimation(StunType stunType) {
+        if (((Player)this.original).getVehicle() != null) {
+            return Animations.BIPED_HIT_ON_MOUNT;
         } else {
-            damagesource.setImpact(this.getImpact(hand));
+            switch (stunType) {
+                case LONG -> {
+                    if (!(this.getOriginal().hasEffect(Effect.REALLY_STUN_IMMUNITY.get()))) {
+                        return Animations.BIPED_HIT_LONG;
+                    } else {
+                        return null;
+                    }
+                }
+                case SHORT, HOLD -> {
+                    if (!(this.getOriginal().hasEffect(Effect.REALLY_STUN_IMMUNITY.get()))) {
+                        return Animations.BIPED_HIT_SHORT;
+                    } else {
+                        return null;
+                    }
+                }
+                case KNOCKDOWN -> {
+                    if (!(this.getOriginal().hasEffect(Effect.REALLY_STUN_IMMUNITY.get()))) {
+                        return Animations.BIPED_KNOCKDOWN;
+                    } else {
+                        return null;
+                    }
+                }
+                case NEUTRALIZE -> {
+                    if (!(this.getOriginal().hasEffect(Effect.REALLY_STUN_IMMUNITY.get()))) {
+                        return Animations.BIPED_COMMON_NEUTRALIZED;
+                    } else {
+                        return null;
+                    }
+                }
+                case FALL -> {
+                    if (!(this.getOriginal().hasEffect(Effect.REALLY_STUN_IMMUNITY.get()))) {
+                        return Animations.BIPED_LANDING;
+                    } else {
+                        return null;
+                    }
+                }
+                case NONE -> {
+                    return null;
+                }
+                default -> {
+                    return null;
+                }
+            }
         }
     }
+
+     */
 }
+
+

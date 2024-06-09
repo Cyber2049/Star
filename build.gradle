@@ -141,6 +141,10 @@ minecraft {
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
+    flatDir {
+        dir 'lib'
+    }
+
     maven {
         url = "https://maven.theillusivec4.top/"
     }
@@ -159,9 +163,6 @@ repositories {
     // ForgeGradle automatically adds the Forge maven and Maven Central for you
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so:
-     flatDir {
-         dir 'lib'
-     }
 }
 
 dependencies {
@@ -177,14 +178,18 @@ dependencies {
     implementation fg.deobf("libs:epicacg-18.5.21.3.fix3:forge-1.18.2-1.0.3")
     implementation fg.deobf("libs:indestructible-18.5.9:forge-1.18.2-1.0.3")
     implementation fg.deobf("libs:blue_skies-1.18.2-1.3.12:1.18.2-1.3.12")
+    //implementation fg.deobf("libs:tick:tick")
     implementation fg.deobf("libs:structure_gel-1.18.2-2.4.7:1.18.2-2.4.7")
     implementation fg.deobf("libs:PlayerExReimagined-18.5.3:18.5.3")
+    //implementation fg.deobf("libs:falchionmoveset:1")
     implementation fg.deobf("libs:caelus-forge-1.18.1-3.0.0.2:18.5.3")
     implementation fg.deobf("libs:irons_spellbooks-1.18.2-1.1.4.2:1.1.4.2")
+    implementation fg.deobf("libs:guhao-1.0.0-all:3.0.57")
+    implementation fg.deobf("libs:StellarisCraft-1.3.0:3.0.57")
     implementation fg.deobf("libs:geckolib-forge-1.18-3.0.57:3.0.57")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.9.1")
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:1.18.2-5.0.9.1")
     implementation fg.deobf("libs:player-animation-lib-forge-1.0.2:1.0.2")
+    //implementation fg.deobf("libs:TickChanger-1.18.2-1.0:1.0")
     // Real mod deobf dependency stars - these get remapped to your current mappings
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api") // Adds JEI API as a compile dependency
     // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}") // Adds the full JEI mod as a runtime dependency
@@ -236,6 +241,11 @@ publishing {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+repositories {
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+}
+
+
 mixin {
     add sourceSets.main, "star.mixin.refmap.json"
 }

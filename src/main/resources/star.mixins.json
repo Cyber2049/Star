@@ -18,6 +18,7 @@
     "itemmixin.PoisonArcItemMixin"
   ],
   "client": [
+    "MinecraftMixin"
   ],
   "injectors": {
     "defaultRequire": 0
