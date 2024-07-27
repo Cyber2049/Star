@@ -21,8 +21,6 @@ public class Config {
             .comment("slow time.")
             .define("Multiplayer please turn off",true);
 
-
-
     public static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static void load(){

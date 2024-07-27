@@ -42,5 +42,45 @@
         "stream": true
       }
     ]
+  },
+  "duang1": {
+    "sounds": [
+      {
+        "name": "star:duang1",
+        "stream": true
+      }
+    ]
+  },
+  "duang2": {
+    "sounds": [
+      {
+        "name": "star:duang2",
+        "stream": true
+      }
+    ]
+  },
+  "foresight": {
+    "sounds": [
+      {
+        "name": "star:foresight",
+        "stream": true
+      }
+    ]
+  },
+  "yamato_step": {
+    "sounds": [
+      {
+        "name": "star:yamato_step",
+        "stream": true
+      }
+    ]
+  },
+  "sekiro": {
+    "sounds": [
+      {
+        "name": "star:sekiro",
+        "stream": true
+      }
+    ]
   }
 }

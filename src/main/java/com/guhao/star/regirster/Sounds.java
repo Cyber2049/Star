@@ -19,6 +19,11 @@ public class Sounds {
     public static final SoundEvent BONG = RegSound("bong");
     public static final SoundEvent BIGBONG = RegSound("bigbong");
     public static final SoundEvent DANGER = RegSound("danger");
+    public static final SoundEvent DUANG1 = RegSound("duang1");
+    public static final SoundEvent DUANG2 = RegSound("duang2");
+    public static final SoundEvent FORESIGHT = RegSound("foresight");
+    public static final SoundEvent YAMATO_STEP = RegSound("yamato_step");
+    public static final SoundEvent SEKIRO = RegSound("sekiro");
 
     public Sounds() {
     }

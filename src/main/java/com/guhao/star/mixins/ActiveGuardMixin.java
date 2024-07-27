@@ -2,14 +2,16 @@ package com.guhao.star.mixins;
 
 import com.guhao.init.Items;
 import com.guhao.star.api.StarAPI;
+import com.guhao.star.efmex.StarWeaponCategory;
 import com.guhao.star.regirster.Effect;
 import com.guhao.star.regirster.Sounds;
-import com.guhao.star.units.Array;
+import com.guhao.star.units.Guard_Array;
 import com.nameless.indestructible.world.capability.AdvancedCustomHumanoidMobPatch;
 import com.nameless.toybox.common.attribute.ai.ToyBoxAttributes;
 import com.nameless.toybox.config.CommonConfig;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,6 +26,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.api.client.animation.ClientAnimator;
+import yesman.epicfight.api.utils.AttackResult;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.EpicFightSounds;
 import yesman.epicfight.particle.EpicFightParticles;
@@ -39,8 +42,11 @@ import yesman.epicfight.world.capabilities.entitypatch.player.ServerPlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.damagesource.EpicFightDamageSource;
 import yesman.epicfight.world.entity.eventlistener.HurtEvent;
+import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 
 import java.util.Arrays;
+
+import static yesman.epicfight.skill.guard.ParryingSkill.PARRY_MOTION_COUNTER;
 
 @Mixin(value = ParryingSkill.class, remap = false, priority = 999999)
 public class ActiveGuardMixin extends GuardSkill {
@@ -49,11 +55,11 @@ public class ActiveGuardMixin extends GuardSkill {
     }
     private HurtEvent.Pre event;
     @Unique
-    Array star_new$array = new Array();
+    Guard_Array star_new$GuardArray = new Guard_Array();
     @Unique
-    StaticAnimation[] star_new$GUARD = star_new$array.getGuard();
+    StaticAnimation[] star_new$GUARD = star_new$GuardArray.getGuard();
     @Unique
-    StaticAnimation[] star_new$PARRY = star_new$array.getParry();
+    StaticAnimation[] star_new$PARRY = star_new$GuardArray.getParry();
 
     @Mutable
     @Final
@@ -70,18 +76,52 @@ public class ActiveGuardMixin extends GuardSkill {
         if (entity.getDirectEntity() instanceof LivingEntity entity1) {
             LazyOptional<EntityPatch> optional = entity1.getCapability(EpicFightCapabilities.CAPABILITY_ENTITY);
             optional.ifPresent(patch -> {
-                if (patch instanceof AdvancedCustomHumanoidMobPatch<?> Patch) {
-                    Patch.setStamina(Patch.getStamina() - starAPI.getStamina(entity1));
+                if (patch instanceof AdvancedCustomHumanoidMobPatch<?> Patch1) {
+                    Patch1.setStamina(Patch1.getStamina() - starAPI.getStamina(entity1));
                 }
             });
         }
     }
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public static GuardSkill.Builder createActiveGuardBuilder() {
+        return GuardSkill.createGuardBuilder().addAdvancedGuardMotion(CapabilityItem.WeaponCategories.SWORD, (itemCap, playerpatch) -> itemCap.getStyle(playerpatch) == CapabilityItem.Styles.ONE_HAND ? new StaticAnimation[]{Animations.SWORD_GUARD_ACTIVE_HIT1, Animations.SWORD_GUARD_ACTIVE_HIT2} : new StaticAnimation[]{Animations.SWORD_GUARD_ACTIVE_HIT2, Animations.SWORD_GUARD_ACTIVE_HIT3})
+                .addAdvancedGuardMotion(CapabilityItem.WeaponCategories.LONGSWORD, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.LONGSWORD_GUARD_ACTIVE_HIT1, Animations.LONGSWORD_GUARD_ACTIVE_HIT2})
+                .addAdvancedGuardMotion(CapabilityItem.WeaponCategories.UCHIGATANA, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.SWORD_GUARD_ACTIVE_HIT1, Animations.SWORD_GUARD_ACTIVE_HIT2})
+                .addAdvancedGuardMotion(CapabilityItem.WeaponCategories.TACHI, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.LONGSWORD_GUARD_ACTIVE_HIT1, Animations.LONGSWORD_GUARD_ACTIVE_HIT2})
+                .addAdvancedGuardMotion(CapabilityItem.WeaponCategories.SPEAR, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.LONGSWORD_GUARD_ACTIVE_HIT1, Animations.LONGSWORD_GUARD_ACTIVE_HIT2})
+                .addAdvancedGuardMotion(StarWeaponCategory.DRAGONSLAYER, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.LONGSWORD_GUARD_ACTIVE_HIT1, Animations.LONGSWORD_GUARD_ACTIVE_HIT2});
+    }
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public void onInitiate(SkillContainer container) {
+        super.onInitiate(container);
+        container.getDataManager().registerData(LAST_ACTIVE);
+        container.getDataManager().registerData(PARRY_MOTION_COUNTER);
+        container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.SERVER_ITEM_USE_EVENT, EVENT_UUID, (event) -> {
+            CapabilityItem itemCapability = ((ServerPlayerPatch)event.getPlayerPatch()).getHoldingItemCapability(InteractionHand.MAIN_HAND);
+            if (this.isHoldingWeaponAvailable(event.getPlayerPatch(), itemCapability, BlockType.GUARD) && this.isExecutableState(event.getPlayerPatch())) {
+                ((ServerPlayer)((ServerPlayerPatch)event.getPlayerPatch()).getOriginal()).startUsingItem(InteractionHand.MAIN_HAND);
+            }
 
+            int lastActive = (Integer)container.getDataManager().getDataValue(LAST_ACTIVE);
+            if ((float)(((ServerPlayer)((ServerPlayerPatch)event.getPlayerPatch()).getOriginal()).tickCount - lastActive) > 0.099999994F) {
+                container.getDataManager().setData(LAST_ACTIVE, ((ServerPlayer)((ServerPlayerPatch)event.getPlayerPatch()).getOriginal()).tickCount);
+            }
+
+        });
+    }
     @Inject(at = @At("HEAD"), method = "guard", cancellable = true)
     public void guard(SkillContainer container, CapabilityItem itemCapability, HurtEvent.Pre event, float knockback, float impact, boolean advanced, CallbackInfo ci) {
         ci.cancel();
         ///////////////////////////////////////////////////
-        EpicFightDamageSource EFDamageSource = star_new$array.getEpicFightDamageSources(event.getDamageSource());
+        EpicFightDamageSource EFDamageSource = star_new$GuardArray.getEpicFightDamageSources(event.getDamageSource());
         if ((EFDamageSource != null)) {
             StaticAnimation an = EFDamageSource.getAnimation();
             if (!(Arrays.asList(star_new$GUARD).contains(an))) {
@@ -124,9 +164,8 @@ public class ActiveGuardMixin extends GuardSkill {
                                 event.setParried(true);
                                 if (event.getPlayerPatch().getOriginal().hasEffect(com.guhao.init.Effect.GUHAO.get())) {
                                     Entity E = event.getDamageSource().getDirectEntity();
-                                    E.hurt(DamageSource.playerAttack(event.getPlayerPatch().getOriginal().getLevel().getNearestPlayer(event.getPlayerPatch().getOriginal(), -1)), (event.getAmount()*0.25f));
+                                    E.hurt(DamageSource.playerAttack(event.getPlayerPatch().getOriginal().getLevel().getNearestPlayer(event.getPlayerPatch().getOriginal(), -1)).setMagic().bypassInvul().bypassMagic().bypassArmor().damageHelmet(), (event.getAmount()*0.25f));
                                     EpicFightParticles.EVISCERATE.get().spawnParticleWithArgument((ServerLevel) playerentity.level, HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, playerentity, damageSource.getDirectEntity());
-
                                 }
                                 penalty = 0.0F;
                                 knockback *= 0.0F;
@@ -147,8 +186,14 @@ public class ActiveGuardMixin extends GuardSkill {
                                 }
                             }
                         } else {
-                            penalty += this.getPenalizer(itemCapability);
-                            container.getDataManager().setDataSync(PENALTY, penalty, playerentity);
+                            if (!(Arrays.asList(star_new$PARRY).contains(an))) {
+                                penalty += this.getPenalizer(itemCapability);
+                                container.getDataManager().setDataSync(PENALTY, penalty, playerentity);
+                            } else {
+                                event.setParried(false);
+                                event.setResult(AttackResult.ResultType.SUCCESS);
+                                return;
+                            }
                         }
 
                         Entity var12 = damageSource.getDirectEntity();
@@ -169,7 +214,6 @@ public class ActiveGuardMixin extends GuardSkill {
                         if (blockType == BlockType.GUARD_BREAK) {
                             event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                         }
-
                         this.dealEvent(event.getPlayerPatch(), event, advanced);
 
                     }
@@ -217,7 +261,8 @@ public class ActiveGuardMixin extends GuardSkill {
                                     });
                                 }
                             }
-                        } else {
+                        }
+                        else {
                             event.setParried(true);
                             if (event.getPlayerPatch().getOriginal().hasEffect(com.guhao.init.Effect.GUHAO.get())) {
                                 Entity E = event.getDamageSource().getDirectEntity();
@@ -244,7 +289,6 @@ public class ActiveGuardMixin extends GuardSkill {
                                 }
                             }
                         }
-
                     } else {
                         penalty += this.getPenalizer(itemCapability);
                         container.getDataManager().setDataSync(PENALTY, penalty, playerentity);
@@ -259,7 +303,7 @@ public class ActiveGuardMixin extends GuardSkill {
                     event.getPlayerPatch().knockBackEntity(damageSource.getDirectEntity().position(), knockback);
                     float consumeAmount = penalty * impact;
                     event.getPlayerPatch().consumeStaminaAlways(consumeAmount);
-                    GuardSkill.BlockType blockType = successParrying ? BlockType.ADVANCED_GUARD : (((ServerPlayerPatch) event.getPlayerPatch()).hasStamina(0.0F) ? BlockType.GUARD : BlockType.GUARD_BREAK);
+                    GuardSkill.BlockType blockType = successParrying ? BlockType.ADVANCED_GUARD : (event.getPlayerPatch().hasStamina(0.0F) ? BlockType.GUARD : BlockType.GUARD_BREAK);
                     StaticAnimation animation = this.getGuardMotion(event.getPlayerPatch(), itemCapability, blockType);
                     if (animation != null) {
                         event.getPlayerPatch().playAnimationSynchronized(animation, 0.0F);
@@ -274,6 +318,7 @@ public class ActiveGuardMixin extends GuardSkill {
             }
         }
     }
+
     @Inject(
             method = {"guard(Lyesman/epicfight/skill/SkillContainer;Lyesman/epicfight/world/capabilities/item/CapabilityItem;Lyesman/epicfight/world/entity/eventlistener/HurtEvent$Pre;FFZ)V"},
             at = {@At("HEAD")},

@@ -1,7 +1,7 @@
 package com.guhao.star.mixins;
 
 import com.guhao.star.regirster.Sounds;
-import com.guhao.star.units.Array;
+import com.guhao.star.units.Guard_Array;
 import com.nameless.toybox.common.attribute.ai.ToyBoxAttributes;
 import com.nameless.toybox.config.CommonConfig;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,13 +45,12 @@ public abstract class GuardMixin extends Skill {
         super(builder);
     }
     private HurtEvent.Pre event;
-
-
-
     @Unique
-    Array star_new$array = new Array();
+    Guard_Array star_new$GuardArray = new Guard_Array();
     @Unique
-    StaticAnimation[] star_new$GUARD = star_new$array.getGuard();
+    StaticAnimation[] star_new$GUARD = star_new$GuardArray.getGuard();
+    @Unique
+    StaticAnimation[] star_new$PARRY = star_new$GuardArray.getParry();
 
     @Shadow
     protected boolean isBlockableSource(DamageSource damageSource, boolean advanced) {
@@ -89,11 +88,11 @@ public abstract class GuardMixin extends Skill {
     public void guard(SkillContainer container, CapabilityItem itemCapability, HurtEvent.Pre event, float knockback, float impact, boolean advanced, CallbackInfo ci) {
         ci.cancel();
         DamageSource damageSource = event.getDamageSource();
-        EpicFightDamageSource epicFightDamageSource = star_new$array.getEpicFightDamageSources(damageSource);
+        EpicFightDamageSource epicFightDamageSource = star_new$GuardArray.getEpicFightDamageSources(damageSource);
         if (epicFightDamageSource != null) {
             StaticAnimation an = epicFightDamageSource.getAnimation();
-            if (!(Arrays.asList(star_new$GUARD).contains(an))) {
-                if (this.isBlockableSource(damageSource, advanced) && !(Arrays.asList(star_new$GUARD).contains(an))) {
+            if (!(Arrays.asList(star_new$GUARD).contains(an)) && !(Arrays.asList(star_new$PARRY).contains(an))) {
+                if (this.isBlockableSource(damageSource, advanced) && !(Arrays.asList(star_new$GUARD).contains(an)) && !(Arrays.asList(star_new$PARRY).contains(an))) {
                     event.getPlayerPatch().playSound(Sounds.BONG, -0.06F, 0.12F);
                     ServerPlayer serveerPlayer = event.getPlayerPatch().getOriginal();
                     EpicFightParticles.HIT_BLUNT.get().spawnParticleWithArgument(serveerPlayer.getLevel(), HitParticleType.FRONT_OF_EYES, HitParticleType.ZERO, serveerPlayer, damageSource.getDirectEntity());
@@ -103,15 +102,15 @@ public abstract class GuardMixin extends Skill {
                         knockback += (float) EnchantmentHelper.getKnockbackBonus(livingEntity) * 0.1F;
                     }
 
-                    float penalty = (Float) container.getDataManager().getDataValue(PENALTY) + getPenalizer(itemCapability);
+                    float penalty = container.getDataManager().getDataValue(PENALTY) + getPenalizer(itemCapability);
                     float consumeAmount = penalty * impact;
-                    ((ServerPlayerPatch) event.getPlayerPatch()).knockBackEntity(damageSource.getDirectEntity().position(), knockback);
-                    ((ServerPlayerPatch) event.getPlayerPatch()).consumeStaminaAlways(consumeAmount);
-                    container.getDataManager().setDataSync(PENALTY, penalty, (ServerPlayer) ((ServerPlayerPatch) event.getPlayerPatch()).getOriginal());
-                    GuardSkill.BlockType blockType = ((ServerPlayerPatch) event.getPlayerPatch()).hasStamina(0.0F) ? GuardSkill.BlockType.GUARD : GuardSkill.BlockType.GUARD_BREAK;
+                    event.getPlayerPatch().knockBackEntity(damageSource.getDirectEntity().position(), knockback);
+                    event.getPlayerPatch().consumeStaminaAlways(consumeAmount);
+                    container.getDataManager().setDataSync(PENALTY, penalty, event.getPlayerPatch().getOriginal());
+                    GuardSkill.BlockType blockType = event.getPlayerPatch().hasStamina(0.0F) ? GuardSkill.BlockType.GUARD : GuardSkill.BlockType.GUARD_BREAK;
                     StaticAnimation animation = getGuardMotion(event.getPlayerPatch(), itemCapability, blockType);
                     if (animation != null) {
-                        ((ServerPlayerPatch) event.getPlayerPatch()).playAnimationSynchronized(animation, 0.0F);
+                        event.getPlayerPatch().playAnimationSynchronized(animation, 0.0F);
                     }
 
                     if (blockType == GuardSkill.BlockType.GUARD_BREAK) {

@@ -1,4 +1,11 @@
 {
   "effect.sword.defense": "§6Break",
-  "effect.star.really_stun_immunity": "§4really_stun_immunity"
+  "effect.star.really_stun_immunity": "§4really_stun_immunity",
+  "effect.star.unstable": "§6unstable",
+  "effect.star.executed": "§cexecuted",
+  "effect.star.execute": "§6execute",
+  "skill.star.see_through": "Double Jump",
+  "skill.star.see_through.tooltip": "Double Jump",
+  "skill.star.yamato_step": "trick dodge",
+  "skill.star.yamato_step.tooltip": "朝你移动的方向闪现。\n\n（耐力：%d）"
 }

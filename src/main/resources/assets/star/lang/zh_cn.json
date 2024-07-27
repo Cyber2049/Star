@@ -1,4 +1,11 @@
 {
   "effect.sword.defense": "§6破防",
-  "effect.star.really_stun_immunity": "§4超级霸体"
+  "effect.star.really_stun_immunity": "§4超级霸体",
+  "effect.star.unstable": "§6不稳态",
+  "effect.star.executed": "§c被处决",
+  "effect.star.execute": "§6处决",
+  "skill.star.see_through": "维吉尔永远学不会的招式",
+  "skill.star.see_through.tooltip": "二段跳，对周围的怪物造成极少量伤害并减少少量耐力。",
+  "skill.star.yamato_step": "瞬步闪避",
+  "skill.star.yamato_step.tooltip": "朝你移动的方向闪现。 \n\n（耐力：%d）"
 }

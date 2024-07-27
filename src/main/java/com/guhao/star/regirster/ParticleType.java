@@ -2,6 +2,7 @@ package com.guhao.star.regirster;
 
 
 import com.guhao.star.client.particle.par.Dangers;
+import com.guhao.star.client.particle.par.Dangers_Red;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -21,12 +22,14 @@ import static com.guhao.star.Star.MODID;
 public class ParticleType {
     public static final DeferredRegister<net.minecraft.core.particles.ParticleType<?>> PARTICLES;
     public static final RegistryObject<SimpleParticleType> DANGER;
+    public static final RegistryObject<SimpleParticleType> DANGER_RED;
 
     @OnlyIn(Dist.CLIENT)
     @SubscribeEvent
     public static void RP(ParticleFactoryRegisterEvent event) {
         ParticleEngine PE = Minecraft.getInstance().particleEngine;
         PE.register(DANGER.get(), Dangers.DangerParticleProvider::new);
+        PE.register(DANGER_RED.get(), Dangers_Red.Dangers_RedParticleProvider::new);
     }
 
     public ParticleType() {
@@ -34,8 +37,7 @@ public class ParticleType {
 
     static {
         PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, MODID);
-        DANGER = PARTICLES.register("dangers", () -> {
-            return new SimpleParticleType(false);
-        });
+        DANGER = PARTICLES.register("dangers", () -> new SimpleParticleType(true));
+        DANGER_RED = PARTICLES.register("dangers_red", () -> new SimpleParticleType(true));
     }
 }
