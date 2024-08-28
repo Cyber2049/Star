@@ -16,10 +16,10 @@ public class StarAPI {
     }
 
     public float getStamina(LivingEntity entity) {
-        return (float) entity.getPersistentData().getDouble("stamina");
+        return entity.getPersistentData().getFloat("stamina");
     }
 
     public void setStaminaStar(LivingEntity entity, float StaminaValue) {
-        entity.getPersistentData().putDouble("stamina", StaminaValue);
+        entity.getPersistentData().putFloat("stamina", StaminaValue);
     }
 }

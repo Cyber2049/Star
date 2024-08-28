@@ -21,6 +21,7 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.capabilities.item.CapabilityItem;
 import yesman.epicfight.world.capabilities.item.WeaponCapability;
+import yesman.epicfight.world.capabilities.item.WeaponCategory;
 import yesman.epicfight.world.entity.ai.attribute.EpicFightAttributes;
 
 import java.util.Map;
@@ -233,6 +234,32 @@ public class StarWeaponCapabilityPresets {
         return builder;
     };
 
+
+    public static final Function<Item, CapabilityItem.Builder> YAMATO = (item) -> {
+        WeaponCapability.Builder builder = WeaponCapability.builder()
+                .category((WeaponCategory) YamatoColliderPreset.YAMATO)
+                .styleProvider((playerpatch) -> CapabilityItem.Styles.TWO_HAND)
+                .collider(YamatoColliderPreset.YAMATO)
+                .swingSound(EpicFightSounds.BLADE_HIT)
+                .hitSound(EpicFightSounds.BLADE_HIT)
+                .canBePlacedOffhand(false)
+                .newStyleCombo(CapabilityItem.Styles.TWO_HAND, StarAnimations.YAMATO_AUTO1, StarAnimations.YAMATO_AUTO2, StarAnimations.YAMATO_AUTO3, StarAnimations.YAMATO_AUTO4,  StarAnimations.YAMATO_DASH, StarAnimations.YAMATO_AIRSLASH)
+                .innateSkill(CapabilityItem.Styles.TWO_HAND, (itemstack) -> StarSkill.LION_CLAW)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.IDLE, StarAnimations.YAMATO_IDLE)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.KNEEL, StarAnimations.YAMATO_IDLE)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.WALK, StarAnimations.YAMATO_WALK)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.CHASE,StarAnimations.YAMATO_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.RUN,StarAnimations.YAMATO_RUN)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.SNEAK,StarAnimations.YAMATO_IDLE)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.SWIM,StarAnimations.YAMATO_IDLE)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.FLOAT, StarAnimations.YAMATO_IDLE)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.FALL, StarAnimations.YAMATO_IDLE)
+                .livingMotionModifier(CapabilityItem.Styles.TWO_HAND, LivingMotions.BLOCK, StarAnimations.YAMATO_GUARD);
+
+        return builder;
+    };
+
+
     public static final Function<Item, CapabilityItem.Builder> SLASH = (item) -> {
         WeaponCapability.Builder builder = WeaponCapability.builder()
                 .category(CapabilityItem.WeaponCategories.TACHI)
@@ -271,6 +298,7 @@ public class StarWeaponCapabilityPresets {
         event.getTypeEntry().put("zwei", ZWEI);
         event.getTypeEntry().put("dragonslayer", DRAGONSLAYER);
         event.getTypeEntry().put("slash", SLASH);
+        event.getTypeEntry().put("yamato", YAMATO);
 
     }
 

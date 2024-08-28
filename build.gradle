@@ -172,13 +172,15 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.18.2-40.2.21'
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
     //implementation fg.deobf("libs:epicfight-18.5.24:EpicFight")
-    implementation fg.deobf("libs:EpicFight-18.5.24-source:EpicFight")
+    implementation fg.deobf("libs:epicfight-forge-18.5.26-1.18.2-:EpicFight")
+    implementation fg.deobf("libs:Tiered-1.18.2-4.1.2-Forge:EpicFight")
     implementation fg.deobf("libs:Jade-1.18.2-forge-5.2.6:EpicFight")
+    implementation fg.deobf("libs:UnionLib-1.18.2-7.2.4-Forge:EpicFight")
     implementation fg.deobf("libs:ShoulderSurfing-Forge-1.18.2-2.4.1:Forge-1.18.2-2.4.1")
     implementation fg.deobf("libs:Mobifier-forge-1.18.2-1.0.3:forge-1.18.2-1.0.3")
     implementation fg.deobf("libs:epicacg-18.5.21.3.fix3:forge-1.18.2-1.0.3")
-    implementation fg.deobf("libs:indestructible-18.5.11:forge-1.18.2-1.0.11")
-    implementation fg.deobf("libs:blue_skies-1.18.2-1.3.12:1.18.2-1.3.12")
+    implementation fg.deobf("libs:indestructible-18.5.11:forge-1.18.2-1.0.0")
+    //implementation fg.deobf("libs:blue_skies-1.18.2-1.3.12:1.18.2-1.3.12")
     //implementation fg.deobf("libs:tick:tick")
     implementation fg.deobf("com.almostreliable.summoningrituals:summoningrituals:1.18.2-1.1.8")
     implementation fg.deobf("libs:structure_gel-1.18.2-2.4.7:1.18.2-2.4.7")
@@ -196,6 +198,7 @@ dependencies {
     implementation fg.deobf("libs:YungsApi-1.18.2-Forge-2.2.9:1.0")
     implementation fg.deobf("libs:WeaponsOfMiracles-18.1.7.38:1.0.0.0")
     implementation fg.deobf("libs:WeaponThrow-1.18.2-5.7:1.0.0.0")
+    implementation fg.deobf("libs:L_EndersCataclysm-0.51-hotfix-1.18.2:1.0.0.0")
     //implementation fg.deobf("libs:WeaponsOfMiracles-20.1.8.1:1.0.0.0")
     implementation fg.deobf("libs:citadel-1.11.3-1.18.2:1.0.0")
     // Real mod deobf dependency stars - these get remapped to your current mappings

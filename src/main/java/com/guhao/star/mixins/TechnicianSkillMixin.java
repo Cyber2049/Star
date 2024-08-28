@@ -2,6 +2,7 @@ package com.guhao.star.mixins;
 
 import com.guhao.star.Config;
 import com.guhao.star.regirster.Sounds;
+import com.guhao.star.units.Guard_Array;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TextComponent;
@@ -13,6 +14,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import yesman.epicfight.api.animation.types.StaticAnimation;
 import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.skill.Skill;
 import yesman.epicfight.skill.SkillContainer;
@@ -28,6 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 @Mixin(value = TechnicianSkill.class,remap = false)
 public class TechnicianSkillMixin extends PassiveSkill {
+    Guard_Array g = new Guard_Array();
+    StaticAnimation[] GUARD = g.getGuard();
     @Unique
     final Boolean star_new$isSlow = Config.SLOW_TIME.get();
     @Shadow
@@ -66,6 +70,6 @@ public class TechnicianSkillMixin extends PassiveSkill {
                 ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
                 scheduledExecutorService.schedule(() -> star_new$delayedTask(container), 750, TimeUnit.MILLISECONDS);
             }
-        });
+        } ,1);
     }
 }

@@ -1,8 +1,6 @@
 package com.guhao.star.mixins;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.*;
 import yesman.epicfight.api.animation.types.DodgeAnimation;
 import yesman.epicfight.skill.BattojutsuPassive;
 import yesman.epicfight.skill.Skill;
@@ -18,6 +16,8 @@ public class BattojutsuPassiveMixin extends Skill {
     public BattojutsuPassiveMixin(Builder<? extends Skill> builder) {
         super(builder);
     }
+    @Mutable
+    @Final
     @Shadow
     private static final UUID EVENT_UUID;
     static {

@@ -6,7 +6,6 @@ import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,15 +41,14 @@ public class StepSkillMixin extends Skill {
     @Inject(method = "onInitiate",at = @At("HEAD"))
     public void onInitiate(SkillContainer container, CallbackInfo ci) {
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.DODGE_SUCCESS_EVENT, EVENT_UUID, (event) -> {
-            Entity entity = container.getExecuter().getOriginal();
-            entity.level.addParticle(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), entity.getX(), entity.getY(), entity.getZ(), Double.longBitsToDouble(entity.getId()), 0, 0);
+            if (container.getExecuter().getOriginal().getLevel() instanceof ServerLevel level) level.addAlwaysVisibleParticle(EpicFightParticles.ENTITY_AFTER_IMAGE.get(), container.getExecuter().getOriginal().getX(), container.getExecuter().getOriginal().getY(), container.getExecuter().getOriginal().getZ(), Double.longBitsToDouble(container.getExecuter().getOriginal().getId()), 0, 0);
             container.getExecuter().playSound(Sounds.FORESIGHT,0.8f,1.2f);
             if(star_new$isSlow) {
                 if (container.getExecuter().getOriginal().getLevel() instanceof ServerLevel _level) {
                     _level.getServer().getCommands().performCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(container.getExecuter().getOriginal().getX(), container.getExecuter().getOriginal().getY(), container.getExecuter().getOriginal().getZ()), Vec2.ZERO, _level, 4, "", new TextComponent(""), _level.getServer(), null).withSuppressedOutput(), "tickrate change 2");
                 }
                 ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-                scheduledExecutorService.schedule(() -> star_new$delayedTask(container), 750, TimeUnit.MILLISECONDS);
+                scheduledExecutorService.schedule(() -> star_new$delayedTask(container), 200, TimeUnit.MILLISECONDS);
             }
         });
     }

@@ -3,7 +3,8 @@ package com.guhao.star.efmex;
 import yesman.epicfight.world.capabilities.item.WeaponCategory;
 
 public enum StarWeaponCategory implements WeaponCategory {
-    DRAGONSLAYER;
+    DRAGONSLAYER,
+    YAMATO;
     final int id;
 
     StarWeaponCategory() {

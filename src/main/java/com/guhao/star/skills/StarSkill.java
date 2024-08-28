@@ -24,6 +24,7 @@ import static com.guhao.star.Star.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus= Mod.EventBusSubscriber.Bus.FORGE)
 public class StarSkill {
+    public static Skill DOUBLE_JUMP;
     public static Skill SEE_THROUGH;
     public static Skill YAMATO_STEP;
     /** New skills **/
@@ -35,30 +36,34 @@ public class StarSkill {
     public static Skill BODYATTACKSHANK;
     public static Skill LION_CLAW;
     public static Skill SLASH;
+    public static Skill YAMATOSKILL;
     public StarSkill() {
     }
 
     public static void registerSkills() {
-        SkillManager.register(SeeThroughSkill::new, Skill.createMoverBuilder().setResource(Skill.Resource.COOLDOWN), MODID, "see_through");
+        SkillManager.register(DoubleJumpSkill::new, Skill.createMoverBuilder().setResource(Skill.Resource.COOLDOWN), MODID, "double_jump");
         SkillManager.register(StepSkill::new, StepSkill.createDodgeBuilder().setAnimations(new ResourceLocation(MODID, "biped/yamato_step_forward"), new ResourceLocation(MODID, "biped/yamato_step_backward"), new ResourceLocation(MODID, "biped/yamato_step_left"), new ResourceLocation(MODID, "biped/yamato_step_right")), MODID, "yamato_step");
         //////////////////////////////
         SkillManager.register(UchigatanaSpikesSkill::new, ConditionalWeaponInnateSkill.createConditionalWeaponInnateBuilder().setSelector((executer) -> executer.getOriginal().isSprinting() ? 1 : 0).setAnimations(new ResourceLocation(MODID, "biped/new/blade_rush_finisher"), new ResourceLocation(MODID, "biped/skill/battojutsu_dash")), MODID, "uchigatanaspikes");
         SkillManager.register(SimpleWeaponInnateSkill::new, SimpleWeaponInnateSkill.createSimpleWeaponInnateBuilder().setAnimations(new ResourceLocation(MODID, "biped/new/tachi_auto2")), MODID, "mortalblade");
         SkillManager.register(LethalSlicingSkill::new, WeaponInnateSkill.createWeaponInnateBuilder(), MODID, "lethalslicing");
+        SkillManager.register(YamatoSkill::new, WeaponInnateSkill.createWeaponInnateBuilder(), MODID, "yamatoskill");
         SkillManager.register(SimpleWeaponInnateSkill::new, SimpleWeaponInnateSkill.createSimpleWeaponInnateBuilder().setAnimations(new ResourceLocation(MODID, "biped/new/mob_greatsword1")), MODID, "lordofthestorm");
         SkillManager.register(SimpleWeaponInnateSkill::new, SimpleWeaponInnateSkill.createSimpleWeaponInnateBuilder().setAnimations(new ResourceLocation(MODID, "biped/new/fist_auto1")), MODID, "bodyattackfist");
         SkillManager.register(SimpleWeaponInnateSkill::new, SimpleWeaponInnateSkill.createSimpleWeaponInnateBuilder().setAnimations(new ResourceLocation(MODID, "biped/new/vanilla_lethal_slicing_start")), MODID, "bodyattackshank");
         SkillManager.register(SimpleWeaponInnateSkill::new, SimpleWeaponInnateSkill.createSimpleWeaponInnateBuilder().setAnimations(new ResourceLocation(MODID, "biped/new/lion_claw")), MODID, "lionclaw");
         SkillManager.register(SimpleWeaponInnateSkill::new, SimpleWeaponInnateSkill.createSimpleWeaponInnateBuilder().setAnimations(new ResourceLocation(MODID, "biped/new/lethal_slicing_third")), MODID, "slash");
-
+        SkillManager.register(SeeThroughSkill::new, SeeThroughSkill.createSeeThroughSkillBuilder(), MODID, "see_through");
     }
 
     @SubscribeEvent
     public static void BuildSkills(SkillBuildEvent event) {
         Logger LOGGER = LogUtils.getLogger();
         LOGGER.info("Build Star Skill");
-        SEE_THROUGH = event.build(MODID, "see_through");
+        DOUBLE_JUMP = event.build(MODID, "double_jump");
         YAMATO_STEP = event.build(MODID, "yamato_step");
+        SEE_THROUGH = event.build(MODID, "see_through");
+
 //////////////////////////////////////////
         /*
         WeaponInnateSkill uchigatanaSpikes = event.build(MODID, "uchigatanaspikes");
@@ -144,6 +149,13 @@ public class StarSkill {
                 .registerPropertiesToAnimation();
         LION_CLAW = lionClaw;
 
+        WeaponInnateSkill YamatoSkill = event.build(MODID, "yamatoskill");
+        lionClaw.newProperty()
+                .addProperty(AnimationProperty.AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(15.0F))
+                .addProperty(AnimationProperty.AttackPhaseProperty.MAX_STRIKES_MODIFIER, ValueModifier.adder(3))
+                .addProperty(AnimationProperty.AttackPhaseProperty.SOURCE_TAG, Set.of(SourceTags.WEAPON_INNATE))
+                .registerPropertiesToAnimation();
+        YAMATOSKILL = YamatoSkill;
 
         WeaponInnateSkill slash = event.build(MODID, "slash");
         slash.newProperty()

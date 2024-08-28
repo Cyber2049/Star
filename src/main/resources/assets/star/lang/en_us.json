@@ -4,8 +4,13 @@
   "effect.star.unstable": "§6unstable",
   "effect.star.executed": "§cexecuted",
   "effect.star.execute": "§6execute",
-  "skill.star.see_through": "Double Jump",
-  "skill.star.see_through.tooltip": "Double Jump",
+  "skill.star.double_jump": "Double Jump",
+  "skill.star.double_jump.tooltip": "Double Jump",
   "skill.star.yamato_step": "trick dodge",
-  "skill.star.yamato_step.tooltip": "朝你移动的方向闪现。\n\n（耐力：%d）"
+  "skill.star.yamato_step.tooltip": "朝你移动的方向闪现。\n\n（耐力：%d）",
+  "entity.star.mimic_tears": "§l§7Mimic Tears",
+  "key.categories.star": "Star",
+  "key.star.cut": "Cut",
+  "skill.star.see_through": "See Through",
+  "skill.star.see_through.tooltip": ""
 }

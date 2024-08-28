@@ -24,6 +24,9 @@ public class Sounds {
     public static final SoundEvent FORESIGHT = RegSound("foresight");
     public static final SoundEvent YAMATO_STEP = RegSound("yamato_step");
     public static final SoundEvent SEKIRO = RegSound("sekiro");
+    public static final SoundEvent CHUA = RegSound("chua");
+    public static final SoundEvent PENG = RegSound("peng");
+    public static final SoundEvent YAMATO_IN = RegSound("yamato.yamato_in");
 
     public Sounds() {
     }

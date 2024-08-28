@@ -82,5 +82,21 @@
         "stream": true
       }
     ]
+  },
+  "chua": {
+    "sounds": [
+      {
+        "name": "star:chua",
+        "stream": true
+      }
+    ]
+  },
+  "peng": {
+    "sounds": [
+      {
+        "name": "star:peng",
+        "stream": true
+      }
+    ]
   }
 }

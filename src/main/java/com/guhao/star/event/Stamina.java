@@ -10,11 +10,11 @@ import static com.guhao.star.Star.MODID;
 
 @Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class Stamina {
-    private final static double B = 0.5;
+    private final static float B = 3.2f;
     @SubscribeEvent
     public static void onEntityJoinWorld(EntityJoinWorldEvent event) {
         if (event.getEntity() instanceof LivingEntity entity && !(entity instanceof Player)) {
-            entity.getPersistentData().putDouble("stamina", B);
+            entity.getPersistentData().putFloat("stamina", B);
         }
     }
 }
