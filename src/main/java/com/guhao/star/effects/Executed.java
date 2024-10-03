@@ -18,7 +18,7 @@ public class Executed extends MobEffect {
     @Override
     public void removeAttributeModifiers(LivingEntity entity, AttributeMap attributeMap, int amplifier) {
         super.removeAttributeModifiers(entity, attributeMap, amplifier);
-        com.guhao.star.event.ExecutedRemoveEvent.execute(entity);
+//        com.guhao.star.event.ExecutedRemoveEvent.execute(entity);
     }
 
     @Override

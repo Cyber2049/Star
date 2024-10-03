@@ -13,7 +13,7 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 
 @Mixin(BlockBehaviour.class)
-public class BlockMixin {
+public abstract class BlockMixin {
     @Inject(method = "canBeReplaced(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/Fluid;)Z", at = @At("HEAD"), cancellable = true)
     private void onBlockPlacedL(BlockState p_60535_, Fluid p_60536_, CallbackInfoReturnable<Boolean> cir) {
         PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(Minecraft.getInstance().player, PlayerPatch.class);

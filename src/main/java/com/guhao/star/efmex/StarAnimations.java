@@ -149,7 +149,9 @@ public class StarAnimations {
                 .addProperty(AnimationProperty.ActionAnimationProperty.RESET_PLAYER_COMBO_COUNTER, true)
                 .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 2.10F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.TIME_STAMPED_EVENTS, new AnimationEvent.TimeStampedEvent[]{
-                        AnimationEvent.TimeStampedEvent.create(0.002F, (ep, anim, objs) -> BattleUnit.Star_Battle_utils.duang(ep), AnimationEvent.Side.SERVER),})
+                        AnimationEvent.TimeStampedEvent.create(0.001F, (livingEntityPatch, staticAnimation, objects) -> BattleUnit.execute_socres(livingEntityPatch), AnimationEvent.TimeStampedEvent.Side.SERVER),
+                        AnimationEvent.TimeStampedEvent.create(0.002F, (ep, anim, objs) -> BattleUnit.Star_Battle_utils.duang(ep), AnimationEvent.Side.SERVER),
+                })
                 .addEvents(AnimationProperty.StaticAnimationProperty.TIME_PERIOD_EVENTS, new AnimationEvent.TimePeriodEvent[]{
                         AnimationEvent.TimePeriodEvent.create(1.2F, 1.25F, (ep, anim, objs) -> BattleUnit.Star_Battle_utils.ex(ep), AnimationEvent.Side.SERVER)
                 })
@@ -175,10 +177,11 @@ public class StarAnimations {
                 .addProperty(AnimationProperty.ActionAnimationProperty.RESET_PLAYER_COMBO_COUNTER, true)
                 .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.TIME_STAMPED_EVENTS, new AnimationEvent.TimeStampedEvent[]{
-                        AnimationEvent.TimeStampedEvent.create(0f, (ep, anim, objs) -> CameraEvents.SetAnim(EXEA, ep.getOriginal(), true), AnimationEvent.Side.BOTH),
+                        AnimationEvent.TimeStampedEvent.create(0f, (ep, anim, objs) -> CameraEvents.SetAnim(EXEA, ep.getOriginal(), true), AnimationEvent.Side.CLIENT),
+                        AnimationEvent.TimeStampedEvent.create(0.001F, (livingEntityPatch, staticAnimation, objects) -> BattleUnit.execute_socres(livingEntityPatch), AnimationEvent.TimeStampedEvent.Side.SERVER),
                         AnimationEvent.TimeStampedEvent.create(1.2f, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.NEUTRALIZE_BOSSES),
                         AnimationEvent.TimeStampedEvent.create(1.955f, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(Sounds.DUANG1),
-                        AnimationEvent.TimeStampedEvent.create(2.45F, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(Sounds.DUANG2),})
+                })
                 .addEvents(AnimationProperty.StaticAnimationProperty.ON_END_EVENTS, AnimationEvent.create((entitypatch, animation, params) -> {
                     entitypatch.getOriginal().removeEffect(Effect.EXECUTED.get());
                     entitypatch.getOriginal().removeEffect(Effect.EXECUTE.get());

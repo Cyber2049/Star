@@ -88,7 +88,7 @@ public abstract class GuardMixin extends Skill {
     public void guard(SkillContainer container, CapabilityItem itemCapability, HurtEvent.Pre event, float knockback, float impact, boolean advanced, CallbackInfo ci) {
         ci.cancel();
         DamageSource damageSource = event.getDamageSource();
-        EpicFightDamageSource epicFightDamageSource = star_new$GuardArray.getEpicFightDamageSources(damageSource);
+        EpicFightDamageSource epicFightDamageSource = Guard_Array.getEpicFightDamageSources(damageSource);
         if (epicFightDamageSource != null) {
             StaticAnimation an = epicFightDamageSource.getAnimation();
             if (!(Arrays.asList(star_new$GUARD).contains(an)) && !(Arrays.asList(star_new$PARRY).contains(an))) {

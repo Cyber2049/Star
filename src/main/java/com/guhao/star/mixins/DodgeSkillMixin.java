@@ -45,7 +45,7 @@ public class DodgeSkillMixin extends Skill {
                     _level.getServer().getCommands().performCommand(new CommandSourceStack(CommandSource.NULL, new Vec3(container.getExecuter().getOriginal().getX(), container.getExecuter().getOriginal().getY(), container.getExecuter().getOriginal().getZ()), Vec2.ZERO, _level, 4, "", new TextComponent(""), _level.getServer(), null).withSuppressedOutput(), "tickrate change 2");
                 }
                 ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(1);
-                scheduledExecutorService.schedule(() -> star_new$delayedTask(container), 200, TimeUnit.MILLISECONDS);
+                scheduledExecutorService.schedule(() -> star_new$delayedTask(container), 100, TimeUnit.MILLISECONDS);
             }
         });
     }

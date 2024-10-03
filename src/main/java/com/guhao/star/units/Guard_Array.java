@@ -35,12 +35,16 @@ public class Guard_Array {
                  WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_LAYED_RIGHT,
                  WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_4,
                  WOMAnimations.GESETZ_SPRENGKOPF,
+                 WOMAnimations.SOLAR_AUTO_2_POLVORA,
+                 WOMAnimations.ENDERBLASTER_ONEHAND_SHOOT_DASH,
+                 WOMAnimations.SOLAR_AUTO_2_POLVORA,
+
 ////////////////////////////////////////////////////////////////
                  GuHaoAnimations.NB_ATTACK,
                  GuHaoAnimations.GUHAO_BATTOJUTSU_DASH,
                  GuHaoAnimations.BIU,
                  GuHaoAnimations.GUHAO_BIU,
-                 GuHaoAnimations.BLOOD_JUDGEMENT,
+                 GuHaoAnimations.BLOOD_JUDGEMENT
          };//只能完美
          PARRY = new StaticAnimation[]{
                  Animations.UCHIGATANA_DASH,
@@ -55,6 +59,9 @@ public class Guard_Array {
                  WOMAnimations.ENDERBLASTER_ONEHAND_SHOOT_3,
                  WOMAnimations.GESETZ_AUTO_3,
                  WOMAnimations.RUINE_REDEMPTION,
+                 WOMAnimations.RUINE_COMET,
+                 WOMAnimations.AGONY_AUTO_1,
+                 WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_4
          };
         DODGE = new StaticAnimation[]{
                 StarAnimations.LETHAL_SLICING_ONCE1,
@@ -64,6 +71,8 @@ public class Guard_Array {
                 WOMAnimations.SOLAR_QUEMADURA,
                 WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_LAYED_LEFT,
                 WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_LAYED_RIGHT,
+                WOMAnimations.ENDERBLASTER_ONEHAND_SHOOT_DASH,
+                WOMAnimations.SOLAR_AUTO_2_POLVORA
         };
         CANDODGE = new StaticAnimation[]{
                 Animations.UCHIGATANA_DASH,
@@ -78,6 +87,7 @@ public class Guard_Array {
                 WOMAnimations.ENDERBLASTER_ONEHAND_SHOOT_3,
                 WOMAnimations.GESETZ_AUTO_3,
                 WOMAnimations.RUINE_REDEMPTION,
+                WOMAnimations.SOLAR_AUTO_2_POLVORA,
 
 
 

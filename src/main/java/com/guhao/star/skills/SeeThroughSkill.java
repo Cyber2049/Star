@@ -2,7 +2,6 @@ package com.guhao.star.skills;
 
 import com.guhao.star.regirster.Keys;
 import com.guhao.star.units.Guard_Array;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import yesman.epicfight.api.animation.types.AttackAnimation;
@@ -20,8 +19,7 @@ import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 import java.util.UUID;
 
 public class SeeThroughSkill extends Skill {
-    private final int active = 99999;
-    private final Minecraft mc = Minecraft.getInstance();
+    private final int active = 60;
     private static final UUID EVENT_UUID = UUID.fromString("31a396ea-0361-11ee-be56-0242ac114514");
     private boolean isCutDown;
     public SeeThroughSkill(Builder<? extends Skill> builder) {
@@ -47,6 +45,7 @@ public class SeeThroughSkill extends Skill {
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.HURT_EVENT_PRE, EVENT_UUID, (event) -> {
             LivingEntityPatch<?> ep = EpicFightCapabilities.getEntityPatch(event.getDamageSource().getEntity(), LivingEntityPatch.class);
             if (ep != null && event.isParried() && ep.getAnimator().getPlayerFor(null).getAnimation() instanceof StaticAnimation animation && Guard_Array.isNoParry(animation)) {
+                container.getExecuter().getOriginal().addEffect(new MobEffectInstance(MobEffects.GLOWING,60,60,false,false));
                 container.getDataManager().setData(CUT,true);
                 container.getDataManager().setData(ACTIVE_TIME,0);
                 container.getDataManager().setData(LEG,false);
@@ -58,6 +57,7 @@ public class SeeThroughSkill extends Skill {
         container.getExecuter().getEventListener().addEventListener(PlayerEventListener.EventType.DODGE_SUCCESS_EVENT, EVENT_UUID, (event) -> {
             LivingEntityPatch<?> ep = EpicFightCapabilities.getEntityPatch(event.getDamageSource().getEntity(), LivingEntityPatch.class);
                 if (ep != null && ep.getAnimator().getPlayerFor(null).getAnimation() instanceof StaticAnimation animation && Guard_Array.canDodge(animation)) {
+                    container.getExecuter().getOriginal().addEffect(new MobEffectInstance(MobEffects.GLOWING,60,60,false,false));
                     container.getDataManager().setData(LEG, true);
                     container.getDataManager().setData(ACTIVE_TIME, 0);
                     container.getDataManager().setData(CUT, false);
@@ -80,7 +80,6 @@ public class SeeThroughSkill extends Skill {
         if (container.getDataManager().getDataValue(ACTIVE_TIME) == null) container.getDataManager().setData(ACTIVE_TIME,active);
         if (container.getDataManager().getDataValue(CUT) == null) container.getDataManager().setData(CUT,false);
         if (container.getDataManager().getDataValue(LEG) == null) container.getDataManager().setData(LEG,false);
-        if (container.getDataManager().getDataValue(CUT) | (container.getDataManager().getDataValue(LEG))) container.getExecuter().getOriginal().addEffect(new MobEffectInstance(MobEffects.GLOWING,1,1,false,false));
         if (container.getDataManager().getDataValue(ACTIVE_TIME) >= active) {
             container.getDataManager().setData(CUT,false);
             container.getDataManager().setData(LEG,false);
@@ -92,11 +91,15 @@ public class SeeThroughSkill extends Skill {
         boolean isLeg = container.getDataManager().getDataValue(LEG);
         if (isCut && isCutDown && (!(container.getExecuter().getAnimator().getPlayerFor(null).getAnimation() instanceof AttackAnimation))) {
             container.getExecuter().playAnimationSynchronized(Animations.RUSHING_TEMPO2,0.0F);
-            container.getDataManager().setData(ACTIVE_TIME,60);
+            container.getExecuter().getOriginal().removeEffect(MobEffects.GLOWING);
+            container.getDataManager().setData(CUT,false);
+            container.getDataManager().setData(ACTIVE_TIME,active);
         }
         if (isLeg && isCutDown && (!(container.getExecuter().getAnimator().getPlayerFor(null).getAnimation() instanceof AttackAnimation))) {
             container.getExecuter().playAnimationSynchronized(Animations.REVELATION_TWOHAND,0.0F);
-            container.getDataManager().setData(ACTIVE_TIME,60);
+            container.getExecuter().getOriginal().removeEffect(MobEffects.GLOWING);
+            container.getDataManager().setData(LEG,false);
+            container.getDataManager().setData(ACTIVE_TIME,active);
         }
     }
 

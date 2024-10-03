@@ -4,13 +4,17 @@ package com.guhao.star.units;
 import L_Ender.cataclysm.entity.projectile.Ignis_Abyss_Fireball_Entity;
 import L_Ender.cataclysm.entity.projectile.Ignis_Fireball_Entity;
 import L_Ender.cataclysm.init.ModEntities;
+import cc.xypp.damage_number.network.DamagePackage;
+import cc.xypp.damage_number.network.Network;
 import com.guhao.star.regirster.Sounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.network.PacketDistributor;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
@@ -20,7 +24,10 @@ import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
 import yesman.epicfight.world.damagesource.StunType;
 
+import java.util.Date;
 import java.util.Random;
+
+import static com.guhao.ranksystem.ServerEventExtra.*;
 
 public class BattleUnit {
     public BattleUnit() {
@@ -93,6 +100,21 @@ public class BattleUnit {
         _entityToSpawn.shoot(_shootFrom.getLookAngle().x, _shootFrom.getLookAngle().y, _shootFrom.getLookAngle().z, speed, 0);
         projectileLevel.addFreshEntity(_entityToSpawn);
     }
+
+    public static void execute_socres(LivingEntityPatch<?> livingEntityPatch) {
+        if (livingEntityPatch.getOriginal().getType() == net.minecraft.world.entity.EntityType.PLAYER) {
+            String uid = livingEntityPatch.getOriginal().getUUID().toString();
+            damageCount.put(uid, damageCount.getOrDefault(uid, 0) + 1);
+            userDamage.put(uid, 100f + userDamage.getOrDefault(uid, 0.0f));
+            keepUntil.put(uid, new Date().getTime() + 9000);
+            Network.INSTANCE.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) livingEntityPatch.getOriginal()),
+                    new DamagePackage("emit",
+                            userDamage.get(uid),
+                            damageCount.get(uid),
+                            100f));
+        }
+    }
+
     public static class Star_Battle_utils {
 
         public static void ex(LivingEntityPatch<?> ep) {

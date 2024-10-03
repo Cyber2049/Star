@@ -42,7 +42,6 @@ public class PlayerPatchMixin<T extends Player> extends LivingEntityPatch<T> {
     @Shadow
     protected double zo;
 
-
     @Override
     public void initAnimator(ClientAnimator clientAnimator) {
         clientAnimator.addLivingAnimation(LivingMotions.IDLE, Animations.BIPED_IDLE);
@@ -73,7 +72,6 @@ public class PlayerPatchMixin<T extends Player> extends LivingEntityPatch<T> {
 
     @Override
     public void updateMotion(boolean b) {
-
     }
 
     protected void initAttributes() {
@@ -132,4 +130,27 @@ public class PlayerPatchMixin<T extends Player> extends LivingEntityPatch<T> {
         yo = this.original.getY();
         zo = this.original.getZ();
     }
+//    /**
+//     * @author
+//     * @reason
+//     */
+//    @Overwrite
+//    @Override
+//    public AttackResult attack(EpicFightDamageSource damageSource, Entity target, InteractionHand hand) {
+//        float fallDist = this.original.fallDistance;
+//        boolean isOnGround = this.original.onGround;
+//        boolean shouldSwap = hand == InteractionHand.OFF_HAND;
+//        // Prevents crit and sweeping edge effect
+//        this.epicFightDamageSource = damageSource;
+//        this.original.attackStrengthTicker = Integer.MAX_VALUE;
+//        this.original.fallDistance = 0.0F;
+//        this.original.onGround = false;
+//        this.setOffhandDamage(shouldSwap);
+//        if (this.getOriginal() != null && target != null) this.original.attack(target);
+//        this.recoverMainhandDamage(shouldSwap);
+//        this.epicFightDamageSource = null;
+//        this.original.fallDistance = fallDist;
+//        this.original.onGround = isOnGround;
+//        return super.attack(damageSource, target, hand);
+//    }
 }

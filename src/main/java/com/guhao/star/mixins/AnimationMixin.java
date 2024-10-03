@@ -6,7 +6,6 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraftforge.common.util.LazyOptional;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,12 +21,9 @@ import yesman.epicfight.api.animation.property.AnimationProperty.AttackPhaseProp
 import yesman.epicfight.api.animation.property.AnimationProperty.StaticAnimationProperty;
 import yesman.epicfight.api.animation.property.MoveCoordFunctions;
 import yesman.epicfight.api.animation.types.*;
-import yesman.epicfight.api.animation.types.grappling.GrapplingAttackAnimation;
 import yesman.epicfight.api.animation.types.procedural.EnderDragonActionAnimation;
 import yesman.epicfight.api.animation.types.procedural.IKInfo;
 import yesman.epicfight.api.collider.Collider;
-import yesman.epicfight.api.utils.HitEntityList;
-import yesman.epicfight.api.utils.TimePairList;
 import yesman.epicfight.api.utils.math.ValueModifier;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.gameasset.Armatures;
@@ -139,31 +135,31 @@ public class AnimationMixin {
                 .addProperty(AttackPhaseProperty.HIT_SOUND, EpicFightSounds.EVISCERATE)
                 .addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.EVISCERATE)
                 .addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 2.4F);
-        BLADE_RUSH_COMBO1 = (new AttackAnimation(0.1F, 0.0F, 0.2F, 0.25F, 0.85F, ColliderPreset.BIPED_BODY_COLLIDER, biped.rootJoint, "biped/skill/blade_rush_combo1", biped)).addProperty(AttackPhaseProperty.HIT_PRIORITY, HitEntityList.Priority.TARGET).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F)).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(1.15F)).addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.adder(4.0F)).addProperty(AttackAnimationProperty.ATTACK_SPEED_FACTOR, 0.0F).addProperty(ActionAnimationProperty.MOVE_ON_LINK, false).addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(new float[]{0.0F, 0.35F})).addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(new float[]{0.0F, 0.25F})).addProperty(ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_DEST_LOCATION_BEGIN).addProperty(ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_DEST_LOCATION).addProperty(ActionAnimationProperty.COORD_GET, MoveCoordFunctions.WORLD_COORD).addProperty(StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE).newTimePair(0.0F, 0.65F).addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false);
-        BLADE_RUSH_COMBO2 = (new AttackAnimation(0.1F, 0.0F, 0.2F, 0.25F, 0.85F, ColliderPreset.BIPED_BODY_COLLIDER, biped.rootJoint, "biped/skill/blade_rush_combo2", biped)).addProperty(AttackPhaseProperty.HIT_PRIORITY, HitEntityList.Priority.TARGET).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F)).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(1.15F)).addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.adder(4.0F)).addProperty(AttackAnimationProperty.ATTACK_SPEED_FACTOR, 0.0F).addProperty(ActionAnimationProperty.MOVE_ON_LINK, false).addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(new float[]{0.0F, 0.35F})).addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(new float[]{0.0F, 0.25F})).addProperty(ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_DEST_LOCATION_BEGIN).addProperty(ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_DEST_LOCATION).addProperty(ActionAnimationProperty.COORD_GET, MoveCoordFunctions.WORLD_COORD).addProperty(StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE).newTimePair(0.0F, 0.65F).addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false);
-        BLADE_RUSH_COMBO3 = (new AttackAnimation(0.1F, 0.0F, 0.25F, 0.35F, 0.85F, ColliderPreset.BIPED_BODY_COLLIDER, biped.rootJoint, "biped/skill/blade_rush_combo3", biped)).addProperty(AttackPhaseProperty.HIT_PRIORITY, HitEntityList.Priority.TARGET).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F)).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(1.15F)).addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.adder(4.0F)).addProperty(AttackAnimationProperty.ATTACK_SPEED_FACTOR, 0.0F).addProperty(ActionAnimationProperty.MOVE_ON_LINK, false).addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(new float[]{0.0F, 0.35F})).addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(new float[]{0.0F, 0.25F})).addProperty(ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_DEST_LOCATION_BEGIN).addProperty(ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_DEST_LOCATION).addProperty(ActionAnimationProperty.COORD_GET, MoveCoordFunctions.WORLD_COORD).addProperty(StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE).newTimePair(0.0F, 0.6F).addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false);
-        BLADE_RUSH_EXECUTE_BIPED = new GrapplingAttackAnimation(0.5F, 1.5F, "biped/skill/blade_rush_execute", biped)
-                .addProperty(AttackPhaseProperty.SOURCE_TAG, Set.of(SourceTags.EXECUTION))
-                .addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(100.0F))
-                .addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(1.5F))
-                .addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(0.0F, 0.5F))
-                .addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 0.95F))
-                .addEvents(
-                        AnimationEvent.TimeStampedEvent.create(0.1F, (entitypatch, animation, params) -> {
-                            LivingEntity grapplingTarget = entitypatch.getGrapplingTarget();
-
-                            if (grapplingTarget != null) {
-                                entitypatch.playSound(EpicFightSounds.BLADE_HIT, 0.0F, 0.0F);
-                            }
-                        }, AnimationEvent.Side.CLIENT),
-                        AnimationEvent.TimeStampedEvent.create(0.3F, (entitypatch, animation, params) -> {
-                            LivingEntity grapplingTarget = entitypatch.getGrapplingTarget();
-
-                            if (grapplingTarget != null) {
-                                entitypatch.playSound(EpicFightSounds.BLADE_HIT, 0.0F, 0.0F);
-                            }
-                        }, AnimationEvent.Side.CLIENT)
-                );
+//        BLADE_RUSH_COMBO1 = (new AttackAnimation(0.1F, 0.0F, 0.2F, 0.25F, 0.85F, ColliderPreset.BIPED_BODY_COLLIDER, biped.rootJoint, "biped/skill/blade_rush_combo1", biped)).addProperty(AttackPhaseProperty.HIT_PRIORITY, HitEntityList.Priority.TARGET).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F)).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(1.15F)).addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.adder(4.0F)).addProperty(AttackAnimationProperty.ATTACK_SPEED_FACTOR, 0.0F).addProperty(ActionAnimationProperty.MOVE_ON_LINK, false).addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(new float[]{0.0F, 0.35F})).addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(new float[]{0.0F, 0.25F})).addProperty(ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_DEST_LOCATION_BEGIN).addProperty(ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_DEST_LOCATION).addProperty(ActionAnimationProperty.COORD_GET, MoveCoordFunctions.WORLD_COORD).addProperty(StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE).newTimePair(0.0F, 0.65F).addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false);
+//        BLADE_RUSH_COMBO2 = (new AttackAnimation(0.1F, 0.0F, 0.2F, 0.25F, 0.85F, ColliderPreset.BIPED_BODY_COLLIDER, biped.rootJoint, "biped/skill/blade_rush_combo2", biped)).addProperty(AttackPhaseProperty.HIT_PRIORITY, HitEntityList.Priority.TARGET).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F)).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(1.15F)).addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.adder(4.0F)).addProperty(AttackAnimationProperty.ATTACK_SPEED_FACTOR, 0.0F).addProperty(ActionAnimationProperty.MOVE_ON_LINK, false).addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(new float[]{0.0F, 0.35F})).addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(new float[]{0.0F, 0.25F})).addProperty(ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_DEST_LOCATION_BEGIN).addProperty(ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_DEST_LOCATION).addProperty(ActionAnimationProperty.COORD_GET, MoveCoordFunctions.WORLD_COORD).addProperty(StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE).newTimePair(0.0F, 0.65F).addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false);
+//        BLADE_RUSH_COMBO3 = (new AttackAnimation(0.1F, 0.0F, 0.25F, 0.35F, 0.85F, ColliderPreset.BIPED_BODY_COLLIDER, biped.rootJoint, "biped/skill/blade_rush_combo3", biped)).addProperty(AttackPhaseProperty.HIT_PRIORITY, HitEntityList.Priority.TARGET).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(20.0F)).addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(1.15F)).addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.adder(4.0F)).addProperty(AttackAnimationProperty.ATTACK_SPEED_FACTOR, 0.0F).addProperty(ActionAnimationProperty.MOVE_ON_LINK, false).addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(new float[]{0.0F, 0.35F})).addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(new float[]{0.0F, 0.25F})).addProperty(ActionAnimationProperty.COORD_SET_BEGIN, MoveCoordFunctions.TRACE_DEST_LOCATION_BEGIN).addProperty(ActionAnimationProperty.COORD_SET_TICK, MoveCoordFunctions.TRACE_DEST_LOCATION).addProperty(ActionAnimationProperty.COORD_GET, MoveCoordFunctions.WORLD_COORD).addProperty(StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE).newTimePair(0.0F, 0.6F).addStateRemoveOld(EntityState.CAN_SKILL_EXECUTION, false);
+//        BLADE_RUSH_EXECUTE_BIPED = new GrapplingAttackAnimation(0.5F, 1.5F, "biped/skill/blade_rush_execute", biped)
+//                .addProperty(AttackPhaseProperty.SOURCE_TAG, Set.of(SourceTags.EXECUTION))
+//                .addProperty(AttackPhaseProperty.ARMOR_NEGATION_MODIFIER, ValueModifier.adder(100.0F))
+//                .addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(1.5F))
+//                .addProperty(ActionAnimationProperty.COORD_UPDATE_TIME, TimePairList.create(0.0F, 0.5F))
+//                .addProperty(ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 0.95F))
+//                .addEvents(
+//                        AnimationEvent.TimeStampedEvent.create(0.1F, (entitypatch, animation, params) -> {
+//                            LivingEntity grapplingTarget = entitypatch.getGrapplingTarget();
+//
+//                            if (grapplingTarget != null) {
+//                                entitypatch.playSound(EpicFightSounds.BLADE_HIT, 0.0F, 0.0F);
+//                            }
+//                        }, AnimationEvent.Side.CLIENT),
+//                        AnimationEvent.TimeStampedEvent.create(0.3F, (entitypatch, animation, params) -> {
+//                            LivingEntity grapplingTarget = entitypatch.getGrapplingTarget();
+//
+//                            if (grapplingTarget != null) {
+//                                entitypatch.playSound(EpicFightSounds.BLADE_HIT, 0.0F, 0.0F);
+//                            }
+//                        }, AnimationEvent.Side.CLIENT)
+//                );
         REVELATION_ONEHAND = new AttackAnimation(0.05F, 0.0F, 0.05F, 0.1F, 0.35F, ColliderPreset.FIST, biped.legR, "biped/skill/revelation_normal", biped)
                 .addProperty(AttackPhaseProperty.SWING_SOUND, EpicFightSounds.WHOOSH)
                 .addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.HIT_BLUNT)
@@ -197,7 +193,7 @@ public class AnimationMixin {
         SWEEPING_EDGE = (new AttackAnimation(0.1F, 0.0F, 0.15F, 0.3F, 0.64F, (Collider)null, biped.toolR, "biped/skill/sweeping_edge", biped)).addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.6F).addProperty(AttackAnimationProperty.EXTRA_COLLIDERS, 1).addProperty(StaticAnimationProperty.POSE_MODIFIER, Animations.ReusableSources.COMBO_ATTACK_DIRECTION_MODIFIER);
         SPEAR_TWOHAND_AUTO1 = (new BasicAttackAnimation(0.1F, 0.2F, 0.3F, 0.36F, (Collider)null, biped.toolR, "biped/combat/spear_twohand_auto1", biped)).addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.2F);
         LONGSWORD_LIECHTENAUER_AUTO3 = (new BasicAttackAnimation(0.25F, 0.1F, 0.2F, 0.54F, (Collider)null, biped.toolR, "biped/combat/longsword_liechtenauer_auto3", biped)).addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.2F);
-        DAGGER_DUAL_AUTO1 = (new BasicAttackAnimation(0.05F, 0.1F, 0.2F, 0.25F, (Collider)null, biped.toolR, "biped/combat/dagger_dual_auto1", biped)).addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 2.4F);
+//        DAGGER_DUAL_AUTO1 = (new BasicAttackAnimation(0.05F, 0.1F, 0.2F, 0.25F, (Collider)null, biped.toolR, "biped/combat/dagger_dual_auto1", biped)).addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 2.4F);
         LONGSWORD_AUTO1 = (new BasicAttackAnimation(0.1F, 0.25F, 0.35F, 0.5F, null, biped.toolR, "biped/combat/longsword_auto1", biped)).addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 1.2F);
         UCHIGATANA_AUTO1 = (new BasicAttackAnimation(0.08F, 0.15F, 0.25F, 0.3F, null, biped.toolR, "biped/combat/uchigatana_auto1", biped)).addProperty(AttackAnimationProperty.BASIS_ATTACK_SPEED, 2.0F);
         DANCING_EDGE = new AttackAnimation(0.1F, "biped/skill/dancing_edge", biped,

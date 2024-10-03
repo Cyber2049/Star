@@ -17,6 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import yesman.epicfight.api.animation.types.LongHitAnimation;
 import yesman.epicfight.api.animation.types.StaticAnimation;
+import yesman.epicfight.client.world.capabilites.entitypatch.player.LocalPlayerPatch;
 import yesman.epicfight.gameasset.Animations;
 import yesman.epicfight.network.server.SPPlayAnimation;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
@@ -55,8 +56,8 @@ public class ExecuteEvent {
     }
 
     private static void execute(@Nullable Event event, Player player, Level level) {
-        if (player == null | level.isClientSide)
-            return;
+        if (player == null) return;
+        if (!level.isClientSide())
         {
                 final Vec3 _center = new Vec3(player.getX(), player.getEyeY(), player.getZ());
                 List<LivingEntity> _entfound = level.getEntitiesOfClass(LivingEntity.class, new AABB(_center, _center).inflate(6 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_center))).toList();
@@ -69,10 +70,16 @@ public class ExecuteEvent {
                             Vec3 viewVec = ep.getOriginal().getViewVector(1.0F);
                             Vec3 viewVec_r = ep.getOriginal().getViewVector(1.0F).reverse();
 //                            if (sekiro.contains(pp.getAdvancedHoldingItemCapability(InteractionHand.MAIN_HAND).getWeaponCategory())) {
+                                pp.setGrapplingTarget(ep.getOriginal());
+                                if (pp instanceof LocalPlayerPatch lpp) {
+                                    lpp.setLockOn(true);
+                                    lpp.toggleLockOn();
+                                }
                                 ep.playSound(Sounds.SEKIRO, 1.0F, 1.0F);
-                                player.teleportTo(ep.getOriginal().getX() + viewVec.x() * 1.95, ep.getOriginal().getY(), ep.getOriginal().getZ() + viewVec.z() * 1.95);
+                                player.teleportTo(ep.getOriginal().getX() + viewVec.x() * 1.85, ep.getOriginal().getY(), ep.getOriginal().getZ() + viewVec.z() * 1.85);
                                 player.lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(ep.getOriginal().getX(), ep.getOriginal().getEyeY() - 0.1, ep.getOriginal().getZ()));
-                                ep.getOriginal().lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(player.getX(), player.getEyeY(), player.getZ()));
+                                ep.getOriginal().lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(player.getX(), player.getEyeY() - 0.1, player.getZ()));
+
                                 player.addEffect(new MobEffectInstance(Effect.EXECUTE.get(), 100, 0));
                                 ep.getOriginal().addEffect(new MobEffectInstance(Effect.EXECUTED.get(), 100, 0));
                                 pp.playAnimationSynchronized(StarAnimations.EXECUTE_SEKIRO, 0.0F);

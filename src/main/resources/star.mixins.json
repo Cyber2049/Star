@@ -9,7 +9,7 @@
     "AnimationMixin",
     "BattojutsuPassiveMixin",
     "BladeRushSkillMixin",
-    "BlockMixin",
+
     "CustomHumanoidMobPatchMixin",
     "DodgeAnimationMixin",
     "DodgeSkillMixin",
