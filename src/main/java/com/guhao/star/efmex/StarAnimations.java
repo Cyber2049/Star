@@ -177,8 +177,12 @@ public class StarAnimations {
                 .addProperty(AnimationProperty.ActionAnimationProperty.RESET_PLAYER_COMBO_COUNTER, true)
                 .addProperty(AnimationProperty.ActionAnimationProperty.NO_GRAVITY_TIME, TimePairList.create(0.0F, 4.0F))
                 .addEvents(AnimationProperty.StaticAnimationProperty.TIME_STAMPED_EVENTS, new AnimationEvent.TimeStampedEvent[]{
-                        AnimationEvent.TimeStampedEvent.create(0f, (ep, anim, objs) -> CameraEvents.SetAnim(EXEA, ep.getOriginal(), true), AnimationEvent.Side.CLIENT),
-                        AnimationEvent.TimeStampedEvent.create(0.001F, (livingEntityPatch, staticAnimation, objects) -> BattleUnit.execute_socres(livingEntityPatch), AnimationEvent.TimeStampedEvent.Side.SERVER),
+                        AnimationEvent.TimeStampedEvent.create(0.000005F, (livingEntityPatch, staticAnimation, objects) -> BattleUnit.turn(livingEntityPatch), AnimationEvent.TimeStampedEvent.Side.BOTH),
+                        AnimationEvent.TimeStampedEvent.create(0.001f, (ep, anim, objs) -> CameraEvents.SetAnim(EXEA, ep.getOriginal(), true), AnimationEvent.Side.CLIENT),
+
+                        AnimationEvent.TimeStampedEvent.create(0.002F, (livingEntityPatch, staticAnimation, objects) -> BattleUnit.execute_socres(livingEntityPatch), AnimationEvent.TimeStampedEvent.Side.SERVER),
+
+
                         AnimationEvent.TimeStampedEvent.create(1.2f, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(EpicFightSounds.NEUTRALIZE_BOSSES),
                         AnimationEvent.TimeStampedEvent.create(1.955f, Animations.ReusableSources.PLAY_SOUND, AnimationEvent.Side.SERVER).params(Sounds.DUANG1),
                 })
@@ -186,11 +190,7 @@ public class StarAnimations {
                     entitypatch.getOriginal().removeEffect(Effect.EXECUTED.get());
                     entitypatch.getOriginal().removeEffect(Effect.EXECUTE.get());
                 }, AnimationEvent.Side.CLIENT))
-                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXE)
-                .addState(EntityState.MOVEMENT_LOCKED, true)
-                .addState(EntityState.TURNING_LOCKED, true)
-                .addState(EntityState.LOCKON_ROTATE, true)
-                .addState(EntityState.UPDATE_LIVING_MOTION, false);
+                .addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, EXE);
         EXECUTED_SEKIRO = (new LongHitAnimation(0.01F, "biped/sekiro_executed", biped)
                 .addProperty(AnimationProperty.ActionAnimationProperty.CANCELABLE_MOVE, false)
                 .addProperty(AnimationProperty.ActionAnimationProperty.STOP_MOVEMENT, true)
@@ -421,7 +421,7 @@ public class StarAnimations {
                 new AttackAnimation.Phase(0.65F, 0.75F, 0.85F, 1.15F, Float.MAX_VALUE, biped.toolR, null))
                 .addProperty(AttackPhaseProperty.DAMAGE_MODIFIER, ValueModifier.multiplier(1.5F))
                 .addProperty(AnimationProperty.AttackPhaseProperty.HIT_SOUND, EpicFightSounds.BLADE_RUSH_FINISHER)
-                .addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL).addProperty(AnimationProperty.StaticAnimationProperty.PLAY_SPEED_MODIFIER, Animations.ReusableSources.CONSTANT_ONE);
+                .addProperty(AttackPhaseProperty.PARTICLE, EpicFightParticles.BLADE_RUSH_SKILL);
 
         WIND_SLASH = new AttackAnimation(0.2F, "biped/new/wind_slash", biped,
                 new AttackAnimation.Phase(.0F, 0.3F, 0.35F, 0.55F, 0.9F, 0.9F, biped.toolR, null), new AttackAnimation.Phase(0.9F, 0.95F, 1.05F, 1.2F, 1.5F, 1.5F, biped.toolR, null),

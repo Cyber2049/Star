@@ -91,7 +91,8 @@ public class ActiveGuardMixin extends GuardSkill {
                 .addAdvancedGuardMotion(CapabilityItem.WeaponCategories.TACHI, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.LONGSWORD_GUARD_ACTIVE_HIT1, Animations.LONGSWORD_GUARD_ACTIVE_HIT2})
                 .addAdvancedGuardMotion(CapabilityItem.WeaponCategories.SPEAR, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.LONGSWORD_GUARD_ACTIVE_HIT1, Animations.LONGSWORD_GUARD_ACTIVE_HIT2})
                 .addAdvancedGuardMotion(StarWeaponCategory.DRAGONSLAYER, (itemCap, playerpatch) -> new StaticAnimation[]{Animations.LONGSWORD_GUARD_ACTIVE_HIT1, Animations.LONGSWORD_GUARD_ACTIVE_HIT2})
-                .addAdvancedGuardMotion(StarWeaponCategory.YAMATO, (itemCap, playerpatch) -> new StaticAnimation[]{StarAnimations.YAMATO_ACTIVE_GUARD_HIT, StarAnimations.YAMATO_ACTIVE_GUARD_HIT2});
+                .addAdvancedGuardMotion(StarWeaponCategory.YAMATO, (itemCap, playerpatch) -> new StaticAnimation[]{StarAnimations.YAMATO_ACTIVE_GUARD_HIT, StarAnimations.YAMATO_ACTIVE_GUARD_HIT2})
+                ;
     }
 
     /**
@@ -217,7 +218,7 @@ public class ActiveGuardMixin extends GuardSkill {
                             event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                         }
                         this.dealEvent(event.getPlayerPatch(), event, advanced);
-
+                        return;
                     }
                 }
             }
@@ -285,9 +286,11 @@ public class ActiveGuardMixin extends GuardSkill {
                     }
 
                     this.dealEvent(event.getPlayerPatch(), event, advanced);
+                    return;
                 }
             }
         }
+        super.guard(container, itemCapability, event, knockback, impact, false);
     }
 
     @Inject(

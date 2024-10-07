@@ -19,9 +19,9 @@ import yesman.epicfight.world.entity.eventlistener.PlayerEventListener;
 import java.util.UUID;
 
 public class SeeThroughSkill extends Skill {
-    private final int active = 60;
+    private static final int active = 60;
     private static final UUID EVENT_UUID = UUID.fromString("31a396ea-0361-11ee-be56-0242ac114514");
-    private boolean isCutDown;
+    private static boolean isCutDown;
     public SeeThroughSkill(Builder<? extends Skill> builder) {
         super(builder);
     }
@@ -83,22 +83,24 @@ public class SeeThroughSkill extends Skill {
         if (container.getDataManager().getDataValue(ACTIVE_TIME) >= active) {
             container.getDataManager().setData(CUT,false);
             container.getDataManager().setData(LEG,false);
+            container.getExecuter().getOriginal().removeEffect(MobEffects.GLOWING);
         }
         if (container.getDataManager().getDataValue(ACTIVE_TIME) < active)  container.getDataManager().setData(ACTIVE_TIME,container.getDataManager().getDataValue(ACTIVE_TIME) + 1);
 
 
         boolean isCut = container.getDataManager().getDataValue(CUT);
         boolean isLeg = container.getDataManager().getDataValue(LEG);
-        if (isCut && isCutDown && (!(container.getExecuter().getAnimator().getPlayerFor(null).getAnimation() instanceof AttackAnimation))) {
-            container.getExecuter().playAnimationSynchronized(Animations.RUSHING_TEMPO2,0.0F);
-            container.getExecuter().getOriginal().removeEffect(MobEffects.GLOWING);
-            container.getDataManager().setData(CUT,false);
-            container.getDataManager().setData(ACTIVE_TIME,active);
-        }
+
         if (isLeg && isCutDown && (!(container.getExecuter().getAnimator().getPlayerFor(null).getAnimation() instanceof AttackAnimation))) {
             container.getExecuter().playAnimationSynchronized(Animations.REVELATION_TWOHAND,0.0F);
             container.getExecuter().getOriginal().removeEffect(MobEffects.GLOWING);
             container.getDataManager().setData(LEG,false);
+            container.getDataManager().setData(ACTIVE_TIME,active);
+        }
+        if (isCut && isCutDown && (!(container.getExecuter().getAnimator().getPlayerFor(null).getAnimation() instanceof AttackAnimation))) {
+            container.getExecuter().playAnimationSynchronized(Animations.RUSHING_TEMPO2,0.0F);
+            container.getExecuter().getOriginal().removeEffect(MobEffects.GLOWING);
+            container.getDataManager().setData(CUT,false);
             container.getDataManager().setData(ACTIVE_TIME,active);
         }
     }

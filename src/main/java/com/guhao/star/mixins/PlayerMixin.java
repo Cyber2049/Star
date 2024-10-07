@@ -1,7 +1,6 @@
 package com.guhao.star.mixins;
 
 import com.guhao.star.regirster.Effect;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
@@ -41,8 +40,8 @@ public abstract class PlayerMixin extends LivingEntity {
     }
     @Inject(method = "openMenu",at = @At("HEAD"), cancellable = true)
     public void openMenu(MenuProvider p_36150_, CallbackInfoReturnable<OptionalInt> cir) {
-        PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(Minecraft.getInstance().player, PlayerPatch.class);
-        if (pp != null && pp.isBattleMode() && (!(Minecraft.getInstance().player.getMainHandItem().isEmpty()))) {
+        PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(this, PlayerPatch.class);
+        if (pp != null && pp.isBattleMode() && (!(this.getMainHandItem().isEmpty()))) {
             cir.setReturnValue(OptionalInt.empty());
             cir.cancel();
         }
@@ -50,8 +49,8 @@ public abstract class PlayerMixin extends LivingEntity {
     @Inject(method = "interactOn", at = @At("HEAD"), cancellable = true)
     public void interactOn(Entity p_36158_, InteractionHand p_36159_, CallbackInfoReturnable<InteractionResult> cir) {
         if (p_36158_ instanceof Player) {
-            PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(Minecraft.getInstance().player, PlayerPatch.class);
-            if (pp != null && pp.isBattleMode() && (!(Minecraft.getInstance().player.getMainHandItem().isEmpty()))) {
+            PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(this, PlayerPatch.class);
+            if (pp != null && pp.isBattleMode() && (!(this.getMainHandItem().isEmpty()))) {
                 cir.setReturnValue(InteractionResult.FAIL);
                 cir.cancel();
             }
@@ -59,8 +58,8 @@ public abstract class PlayerMixin extends LivingEntity {
     }
     @Inject(method = "mayUseItemAt", at = @At("HEAD"), cancellable = true)
     public void mayUseItemAt(BlockPos p_36205_, Direction p_36206_, ItemStack p_36207_, CallbackInfoReturnable<Boolean> cir) {
-        PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(Minecraft.getInstance().player, PlayerPatch.class);
-        if (pp != null && pp.isBattleMode() && (!(Minecraft.getInstance().player.getMainHandItem().isEmpty()))) {
+        PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(this, PlayerPatch.class);
+        if (pp != null && pp.isBattleMode() && (!(this.getMainHandItem().isEmpty()))) {
             cir.setReturnValue(false);
             cir.cancel();
         }

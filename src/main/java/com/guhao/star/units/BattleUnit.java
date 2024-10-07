@@ -6,7 +6,9 @@ import L_Ender.cataclysm.entity.projectile.Ignis_Fireball_Entity;
 import L_Ender.cataclysm.init.ModEntities;
 import cc.xypp.damage_number.network.DamagePackage;
 import cc.xypp.damage_number.network.Network;
+import com.guhao.star.efmex.StarAnimations;
 import com.guhao.star.regirster.Sounds;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -14,7 +16,11 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.network.PacketDistributor;
+import yesman.epicfight.api.animation.types.LongHitAnimation;
+import yesman.epicfight.api.utils.math.MathUtils;
 import yesman.epicfight.api.utils.math.OpenMatrix4f;
 import yesman.epicfight.api.utils.math.Vec3f;
 import yesman.epicfight.gameasset.Armatures;
@@ -22,9 +28,12 @@ import yesman.epicfight.particle.EpicFightParticles;
 import yesman.epicfight.particle.HitParticleType;
 import yesman.epicfight.world.capabilities.EpicFightCapabilities;
 import yesman.epicfight.world.capabilities.entitypatch.LivingEntityPatch;
+import yesman.epicfight.world.capabilities.entitypatch.player.PlayerPatch;
 import yesman.epicfight.world.damagesource.StunType;
 
+import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import static com.guhao.ranksystem.ServerEventExtra.*;
@@ -112,6 +121,36 @@ public class BattleUnit {
                             userDamage.get(uid),
                             damageCount.get(uid),
                             100f));
+        }
+    }
+
+    public static void turn(LivingEntityPatch<?> livingEntityPatch) {
+        {
+            final Vec3 _center = new Vec3(livingEntityPatch.getOriginal().getX(), livingEntityPatch.getOriginal().getEyeY(), livingEntityPatch.getOriginal().getZ());
+            List<LivingEntity> _entfound = livingEntityPatch.getOriginal().getLevel().getEntitiesOfClass(LivingEntity.class, new AABB(_center, _center).inflate(6 / 2d), e -> true).stream().sorted(Comparator.comparingDouble(_entcnd -> _entcnd.distanceToSqr(_center))).toList();
+            for (LivingEntity entityiterator : _entfound) {
+                LivingEntityPatch<?> ep = EpicFightCapabilities.getEntityPatch(entityiterator, LivingEntityPatch.class);
+                if (ep != null && (entityiterator != livingEntityPatch.getOriginal())) {
+                    PlayerPatch<?> pp = EpicFightCapabilities.getEntityPatch(livingEntityPatch.getOriginal(), PlayerPatch.class);
+                    if ((ep.getAnimator().getPlayerFor(null).getAnimation() instanceof LongHitAnimation longHitAnimation && (longHitAnimation == StarAnimations.EXECUTED_SEKIRO))) {
+//                        if (pp instanceof LocalPlayerPatch lpp) {
+//                            lpp.toggleLockOn();
+//                            lpp.setLockOn(true);
+//                        }
+
+                        Vec3 playerP = pp.getOriginal().position();
+                        Vec3 targetP = ep.getOriginal().position();
+                        Vec3 toTarget = targetP.subtract(playerP);
+                        float yaw = (float) MathUtils.getYRotOfVector(toTarget);
+                        float pitch = (float) MathUtils.getXRotOfVector(toTarget);
+                        pp.getOriginal().setYRot(yaw);
+                        pp.getOriginal().setXRot(pitch);
+                        livingEntityPatch.getOriginal().lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(ep.getOriginal().getX(), ep.getOriginal().getEyeY() - 0.1, ep.getOriginal().getZ()));
+                        ep.getOriginal().lookAt(EntityAnchorArgument.Anchor.EYES, new Vec3(livingEntityPatch.getOriginal().getX(), livingEntityPatch.getOriginal().getEyeY() - 0.1, livingEntityPatch.getOriginal().getZ()));
+                        break;
+                    }
+                }
+            }
         }
     }
 

@@ -141,7 +141,7 @@ public abstract class GuardMixin extends Skill {
                         }
 
                         if (blockType == GuardSkill.BlockType.GUARD_BREAK) {
-                            ((ServerPlayerPatch) event.getPlayerPatch()).playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
+                            event.getPlayerPatch().playSound(EpicFightSounds.NEUTRALIZE_MOBS, 3.0F, 0.0F, 0.1F);
                         }
 
                         dealEvent(event.getPlayerPatch(), event, advanced);

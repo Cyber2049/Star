@@ -33,7 +33,6 @@ public class Guard_Array {
                  WOMAnimations.SOLAR_QUEMADURA,
                  WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_LAYED_LEFT,
                  WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_LAYED_RIGHT,
-                 WOMAnimations.ENDERBLASTER_TWOHAND_SHOOT_4,
                  WOMAnimations.GESETZ_SPRENGKOPF,
                  WOMAnimations.SOLAR_AUTO_2_POLVORA,
                  WOMAnimations.ENDERBLASTER_ONEHAND_SHOOT_DASH,

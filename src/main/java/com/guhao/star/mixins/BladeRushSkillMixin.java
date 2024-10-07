@@ -140,7 +140,7 @@ public class BladeRushSkillMixin extends WeaponInnateSkill {
 
             LivingEntityPatch<?> entitypatch = EpicFightCapabilities.getEntityPatch(target, LivingEntityPatch.class);
 
-            if (entitypatch != null && entitypatch.getEntityState().hurtLevel() > 1 && this.tryAnimations.containsKey(target.getType())) {
+            if (entitypatch != null && entitypatch.getEntityState().hurtLevel() > 1) {
                 execute = true;
             }
         }
